@@ -1,0 +1,67 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinema-api
+    command: >
+      sh -c "
+        echo '-----------------------------------------------------------' &&
+        echo '  🚀 API iniciando...' &&
+        echo '  🌐 Endpoint:      http://localhost:3000' &&
+        echo '  📘 Swagger:       http://localhost:3000/api/docs' &&
+        echo '  🗄️  Postgres:      postgres:5432' &&
+        echo '  🧠 Redis:         redis:6379' &&
+        echo '  🐇 RabbitMQ:      rabbitmq:5672 / painel: http://localhost:15672' &&
+        echo '-----------------------------------------------------------' &&
+        npm run start:dev
+      "
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    networks:
+      - cinema_network
+
+  postgres:
+    image: postgres:15
+    container_name: cinema-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    networks:
+      - cinema_network
+    logging:
+      driver: "none"
+
+  redis:
+    image: redis:7
+    container_name: cinema-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - cinema_network
+    logging:
+      driver: "none"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: cinema-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - cinema_network
+    logging:
+      driver: "none"
+
+networks:
+  cinema_network:
