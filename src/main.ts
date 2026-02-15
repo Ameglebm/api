@@ -20,7 +20,9 @@ async function bootstrap() {
   console.log(`  📘 Swagger:       http://localhost:${port}/api/docs`);
   console.log('  🗄️  Postgres:      postgres:5432');
   console.log('  🧠 Redis:         redis:6379');
-  console.log('  🐇 RabbitMQ:      rabbitmq:5672 / painel: http://localhost:15672');
+  console.log(
+    '  🐇 RabbitMQ:      rabbitmq:5672 / painel: http://localhost:15672',
+  );
   console.log('-----------------------------------------------------------');
 }
 bootstrap();
