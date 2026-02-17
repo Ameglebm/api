@@ -1,7 +1,79 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../node_modules/@prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// ENUMS
+enum SeatStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  EXPIRED
+}
+
+// SESSION — raiz de tudo
+model Session {
+  id          String   @id @default(uuid())
+  movie       String
+  room        String
+  startsAt    DateTime
+  ticketPrice Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+
+  seats       Seat[]
+
+  @@map("sessions")
+}
+
+// SEAT — recurso disputado
+model Seat {
+  id         String     @id @default(uuid())
+  sessionId  String
+  seatNumber String
+  status     SeatStatus @default(AVAILABLE)
+  updatedAt  DateTime   @updatedAt
+
+  session      Session       @relation(fields: [sessionId], references: [id])
+  reservations Reservation[]
+  sales        Sale[]
+
+  @@unique([sessionId, seatNumber])
+  @@map("seats")
+}
+
+// RESERVATION — temporária, TTL 30s
+model Reservation {
+  id        String            @id @default(uuid())
+  seatId    String
+  userId    String
+  status    ReservationStatus @default(PENDING)
+  expiresAt DateTime
+  createdAt DateTime          @default(now())
+
+  seat Seat  @relation(fields: [seatId], references: [id])
+  sale Sale?
+
+  @@map("reservations")
+}
+
+// SALE — venda definitiva, registro permanente
+model Sale {
+  id            String   @id @default(uuid())
+  reservationId String   @unique
+  seatId        String
+  userId        String
+  paidAt        DateTime @default(now())
+
+  reservation Reservation @relation(fields: [reservationId], references: [id])
+  seat        Seat        @relation(fields: [seatId], references: [id])
+
+  @@map("sales")
 }
