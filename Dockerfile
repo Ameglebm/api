@@ -8,6 +8,6 @@ RUN npm install
 # Copia o restante da aplicação
 COPY . .
 # Expõe a porta da API
-EXPOSE 3333
+EXPOSE 3000
 # Comando para rodar em desenvolvimento
 CMD ["npx", "ts-node-dev", "--respawn", "--transpile-only", "src/main.ts"]

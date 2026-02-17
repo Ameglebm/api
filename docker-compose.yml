@@ -5,28 +5,39 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: cinema-api
-    command: >
-      sh -c "
-        echo '-----------------------------------------------------------' &&
-        echo '  🚀 API iniciando...' &&
-        echo '  🌐 Endpoint:      http://localhost:3000' &&
-        echo '  📘 Swagger:       http://localhost:3000/api/docs' &&
-        echo '  🗄️  Postgres:      postgres:5432' &&
-        echo '  🧠 Redis:         redis:6379' &&
-        echo '  🐇 RabbitMQ:      rabbitmq:5672 / painel: http://localhost:15672' &&
-        echo '-----------------------------------------------------------' &&
-        npm run start:dev
-      "
     ports:
       - "3000:3000"
     env_file:
       - .env
     depends_on:
-      - postgres
-      - redis
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
     networks:
       - cinema_network
+
+  prisma-studio:
+    # ⚠️  MODO AVALIAÇÃO — facilita a inspeção do banco durante os testes
+    # Para desabilitar em outros ambientes, comente ou remova este serviço
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinema-prisma-studio
+    command: npx prisma studio --port 5555 --browser none
+    environment:
+      DATABASE_URL: "postgresql://cinema:cinema@postgres:5432/cinema?schema=public"
+    ports:
+      - "5555:5555"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cinema_network
+    logging:
+      driver: "none"
 
   postgres:
     image: postgres:15
@@ -41,6 +52,11 @@ services:
       - cinema_network
     logging:
       driver: "none"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cinema -d cinema"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7

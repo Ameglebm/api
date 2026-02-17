@@ -1,0 +1,145 @@
+### 🎬 CINEMA TICKET API - Endpoints
+
+@baseUrl = http://localhost:3000
+
+### 🏥 HEALTH CHECK
+### Health Check da API
+GET {{baseUrl}}
+Content-Type: application/json
+
+### 📋 SESSIONS - Gestão de Sessões
+### Criar nova sessão
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Avatar: O Caminho da Água",
+  "room": "Sala 3",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+### Listar todas as sessões
+GET {{baseUrl}}/sessions
+Content-Type: application/json
+
+### Buscar sessão por ID
+@sessionId = SESSION_ID_AQUI
+GET {{baseUrl}}/sessions/{{sessionId}}
+Content-Type: application/json
+
+### 💺 SEATS - Disponibilidade de Assentos
+### Listar assentos de uma sessão (tempo real)
+@sessionIdForSeats = SESSION_ID_AQUI
+GET {{baseUrl}}/seats/{{sessionIdForSeats}}
+Content-Type: application/json
+
+### 🎟️ RESERVATIONS - Reservas Temporárias
+### Criar nova reserva (TTL 30s)
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "SEAT_ID_AQUI",
+  "userId": "user-123"
+}
+
+### Consultar status de uma reserva
+@reservationId = RESERVATION_ID_AQUI
+GET {{baseUrl}}/reservations/{{reservationId}}
+Content-Type: application/json
+
+### 💳 PAYMENTS - Confirmação de Pagamento
+### Confirmar pagamento de uma reserva
+@reservationIdForPayment = RESERVATION_ID_AQUI
+POST {{baseUrl}}/payments/confirm/{{reservationIdForPayment}}
+Content-Type: application/json
+
+### 💰 SALES - Histórico de Vendas
+### Buscar histórico de compras por usuário
+@userId = user-123
+GET {{baseUrl}}/sales/history/{{userId}}
+Content-Type: application/json
+
+### 📘 SWAGGER - Documentação Interativa
+### Abrir Swagger UI (cole no navegador)
+### http://localhost:3000/api/docs
+
+### 🧪 TESTES DE CONCORRÊNCIA
+### TESTE 1: Criar sessão
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Teste Concorrência",
+  "room": "Sala 1",
+  "startsAt": "2026-02-20T21:00:00.000Z",
+  "ticketPrice": 30.00,
+  "totalSeats": 2
+}
+
+### TESTE 2: Pegar ID da sessão criada
+@testSessionId = {{createSession.response.body.id}}
+
+### TESTE 3: Listar assentos da sessão de teste
+GET {{baseUrl}}/seats/{{testSessionId}}
+Content-Type: application/json
+
+### TESTE 4: Usuário 1 tenta reservar assento A1
+# @name reservation1
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "COPIAR_SEAT_ID_DO_TESTE_3",
+  "userId": "user-001"
+}
+
+### TESTE 5: Usuário 2 tenta reservar o MESMO assento A1 (deve retornar 409 Conflict)
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "MESMO_SEAT_ID_DO_TESTE_4",
+  "userId": "user-002"
+}
+
+### TESTE 6: Confirmar pagamento da reserva do usuário 1
+@testReservationId = {{reservation1.response.body.id}}
+POST {{baseUrl}}/payments/confirm/{{testReservationId}}
+Content-Type: application/json
+
+### TESTE 7: Verificar que o assento agora está SOLD
+GET {{baseUrl}}/seats/{{testSessionId}}
+Content-Type: application/json
+
+### TESTE 8: Histórico de compras do usuário 1
+GET {{baseUrl}}/sales/history/user-001
+Content-Type: application/json
+
+### 📊 RABBITMQ - Painel de Gerenciamento
+### Abrir RabbitMQ Management UI (cole no navegador)
+### http://localhost:15672
+### User: guest
+### Password: guest
+
+### 🧠 REDIS - Verificar Locks (via redis-cli)
+
+### No terminal, dentro do container Redis:
+### docker exec -it cinema-redis redis-cli
+### KEYS seat:*
+### TTL seat:SEAT_ID_AQUI
+### GET seat:SEAT_ID_AQUI
+
+### 📝 NOTAS
+### ============================================
+###
+### 1. Substitua SESSION_ID_AQUI, SEAT_ID_AQUI, etc. pelos valores reais
+### 2. Use a seção de TESTES DE CONCORRÊNCIA para validar race conditions
+### 3. O Swagger está disponível em /api/docs para testes interativos
+### 4. Locks Redis expiram automaticamente em 30 segundos
+### 5. Reservas não confirmadas expiram e liberam o assento
+###
+### ============================================
