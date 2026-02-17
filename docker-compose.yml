@@ -5,6 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: cinema-api
+    # Roda migrations e sobe a API
+    command: >
+      sh -c "npx prisma migrate deploy && npx ts-node-dev --respawn --transpile-only src/main.ts"
     ports:
       - "3000:3000"
     env_file:
@@ -20,13 +23,15 @@ services:
       - cinema_network
 
   prisma-studio:
-    # ⚠️  MODO AVALIAÇÃO — facilita a inspeção do banco durante os testes
+    # MODO AVALIAÇÃO — facilita a inspeção do banco durante os testes
     # Para desabilitar em outros ambientes, comente ou remova este serviço
     build:
       context: .
       dockerfile: Dockerfile
     container_name: cinema-prisma-studio
-    command: npx prisma studio --port 5555 --browser none
+    # Aguarda migrations aplicadas pela api antes de iniciar
+    command: >
+      sh -c "sleep 8 && npx prisma studio --port 5555 --browser none"
     environment:
       DATABASE_URL: "postgresql://cinema:cinema@postgres:5432/cinema?schema=public"
     ports:
