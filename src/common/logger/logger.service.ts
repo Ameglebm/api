@@ -41,7 +41,11 @@ export class LoggerService implements NestLoggerService {
   verbose(message: string, metadata?: Record<string, any>) {
     this.writeLog(LogLevel.DEBUG, message, metadata);
   }
-  private writeLog(level: LogLevel, message: string, metadata?: Record<string, any>) {
+  private writeLog(
+    level: LogLevel,
+    message: string,
+    metadata?: Record<string, any>,
+  ) {
     const timestamp = new Date().toISOString();
     const context = this.context || 'Application';
     // JSON estruturado para parsing/análise
@@ -54,14 +58,18 @@ export class LoggerService implements NestLoggerService {
     };
     // Formatação colorida para console
     const levelColor = this.getLevelColor(level);
-    const levelIcon = this.getLevelIcon(level);   
+    const levelIcon = this.getLevelIcon(level);
     const prettyLog = [
       `${this.colors.dim}[${timestamp}]${this.colors.reset}`,
       `${levelColor}${levelIcon} ${level}${this.colors.reset}`,
       `${this.colors.cyan}[${context}]${this.colors.reset}`,
       `${this.colors.bright}${message}${this.colors.reset}`,
-      metadata ? `\n${this.colors.dim}${JSON.stringify(metadata, null, 2)}${this.colors.reset}` : '',
-    ].filter(Boolean).join(' ');
+      metadata
+        ? `\n${this.colors.dim}${JSON.stringify(metadata, null, 2)}${this.colors.reset}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
     // Envia ambos: JSON estruturado + versão colorida
     switch (level) {
       case LogLevel.ERROR:

@@ -14,7 +14,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       port: Number(process.env.REDIS_PORT) || 6379,
     });
     this.client.on('connect', () => this.logger.log('Conectado ao Redis'));
-    this.client.on('error', (err) => this.logger.error('Erro Redis', err.message));
+    this.client.on('error', (err) =>
+      this.logger.error('Erro Redis', err.message),
+    );
   }
   async onModuleDestroy() {
     await this.client.quit();
@@ -26,7 +28,13 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
    */
   async acquireLock(seatId: string, ttlMs = 30_000): Promise<boolean> {
     const key = `seat:${seatId}`;
-    const result = await this.client.set(key, '1', 'EX', Math.ceil(ttlMs / 1000), 'NX');
+    const result = await this.client.set(
+      key,
+      '1',
+      'EX',
+      Math.ceil(ttlMs / 1000),
+      'NX',
+    );
     return result === 'OK';
   }
   /**
