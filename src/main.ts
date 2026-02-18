@@ -22,11 +22,13 @@ async function bootstrap() {
       transform: true,
     }),
   );
-   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Cinema API')
-    .setDescription('Sistema de venda de ingressos com controle de concorrência')
+    .setDescription(
+      'Sistema de venda de ingressos com controle de concorrência',
+    )
     .setVersion('1.0')
     .addTag('health', 'Health check')
     .addTag('sessions', 'Gestão de sessões de cinema')
@@ -36,7 +38,7 @@ async function bootstrap() {
     .addTag('sales', 'Histórico de vendas')
     .build();
 
-   const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
@@ -44,9 +46,9 @@ async function bootstrap() {
   const link = (url: string) =>
     `\x1b]8;;${url}\x07\x1b[1;96;4m${url}\x1b[0m\x1b]8;;\x07`;
 
-  const apiUrl     = `http://localhost:${port}`;
+  const apiUrl = `http://localhost:${port}`;
   const swaggerUrl = `http://localhost:${port}/api/docs`;
-  const rabbitUrl  = `http://localhost:15672`;
+  const rabbitUrl = `http://localhost:15672`;
   const prismaUrl = `http://localhost:5555`;
 
   const banner = `

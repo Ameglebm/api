@@ -1,0 +1,71 @@
+@baseUrl = http://localhost:3000
+
+### [1] Criar sessão
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Avatar: O Caminho da Água",
+  "room": "Sala 3",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [2] Listar sessões
+GET {{baseUrl}}/sessions
+
+###
+
+### [3] Buscar por ID  ← rode [1] antes
+@sessionId = {{createSession.response.body.id}}
+GET {{baseUrl}}/sessions/{{sessionId}}
+
+###
+
+### [4] ID inexistente → 404
+GET {{baseUrl}}/sessions/id-invalido
+
+###
+
+### [5] totalSeats < 16 → 400
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Teste",
+  "room": "Sala 1",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 5
+}
+
+###
+
+### [6] Campo faltando → 400
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "room": "Sala 1",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [7] Preço negativo → 400
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Teste",
+  "room": "Sala 1",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": -10,
+  "totalSeats": 20
+}

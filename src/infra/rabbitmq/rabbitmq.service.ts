@@ -5,7 +5,7 @@ export type QueueName = 'reservations' | 'payments' | 'expirations';
 
 @Injectable()
 export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
-  private connection: amqplib.ChannelModel;  // ← era Connection
+  private connection: amqplib.ChannelModel; // ← era Connection
   private channel: amqplib.Channel;
   constructor(private readonly logger: LoggerService) {
     this.logger.setContext('RabbitMQService');
@@ -33,13 +33,13 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
     await this.connection?.close();
     this.logger.log('Desconectado do RabbitMQ');
   }
-// Publica uma mensagem em uma fila, persistent: true → mensagem sobrevive ao restart do broker.
+  // Publica uma mensagem em uma fila, persistent: true → mensagem sobrevive ao restart do broker.
   publish<T>(queue: QueueName, payload: T): void {
     const content = Buffer.from(JSON.stringify(payload));
     this.channel.sendToQueue(queue, content, { persistent: true });
     this.logger.log(`Evento publicado em [${queue}]`, { payload });
   }
-// Registra um consumer para uma fila, prefetch(1) → processa 1 mensagem por vez, sem sobrecarregar.
+  // Registra um consumer para uma fila, prefetch(1) → processa 1 mensagem por vez, sem sobrecarregar.
   async consume<T>(
     queue: QueueName,
     handler: (payload: T) => Promise<void>,
@@ -52,7 +52,10 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
         await handler(payload);
         this.channel.ack(msg);
       } catch (error) {
-        this.logger.error(`Falha ao processar mensagem em [${queue}]`, error.message);
+        this.logger.error(
+          `Falha ao processar mensagem em [${queue}]`,
+          error.message,
+        );
         this.channel.nack(msg, false, false);
       }
     });
