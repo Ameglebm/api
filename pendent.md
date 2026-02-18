@@ -110,44 +110,31 @@ Por quê Redis + Postgres juntos?
     - RedisService: lock atômico SET NX TTL 30s
     - RabbitMQService: publisher e consumer de eventos
 
-    ✅ 1. Sobre usar redis-server /usr/local/etc/redis/redis.conf
-
-    Você me perguntou:
-    o que ganho com isso, o que melhora?
-    📌 Ganha controle fino sobre o Redis.
+    Sobre usar redis-server /usr/local/etc/redis/redis.conf
+    o que melhora?
+    Ganha controle fino sobre o Redis.
     A imagem oficial do Redis, sem config file, roda 100% no modo padrão, que é bom, mas limitado.
     Ao definir seu redis.conf, você pode:
     Benefícios técnicos reais
-
     ✔ Evitar perda de dados acidental
     Você pode desativar RDB/AOF caso não precise (em dev).
     Ou ativar snapshots com frequência controlada (em prod).
-
     ✔ Controlar memória, TTL, eviction policy
     Essencial em sistemas que usam locks com TTL, como seu módulo Reservation.
 
     Exemplo:
     maxmemory 256mb
     maxmemory-policy allkeys-lru
-
     ✔ Ativar/Desativar AOF para performance
     AOF deixa persistente mas é mais lento.
-
     ✔ Remover o warning "using default config"
     Só cosmético, mas fica limpo.
-
     ✔ Ter configurações diferentes para DEV vs PROD
     Dev: persistência off, máximo desempenho.
     Prod: snapshots, AOF, limites de memória, tuning.
 
-    📌 Resumo direto
-
-    Para seu projeto agora:
-    Não é obrigatório, mas é recomendado quando for para PROD.
-    Hoje: pode ignorar.
-    Profissionalizando: vale muito a pena.
-    mande para mim de uma forma mais simples para eu colocar o que pode melhorar aqui q eu vi e tals e o que eu pensei okay
-    tambem escalar 
+ o dResumireto
+    N é obrigatório mas pode ser adicionado depois
     /docker
         redis/
             redis.conf
@@ -157,25 +144,19 @@ Por quê Redis + Postgres juntos?
     docker-compose.dev.yml
     docker-compose.prod.yml
     
-    🎯 Resultado final
-
-    Com essa estrutura você tem:
-
-    ✔ Ambiente DEV completo
-
+    esta estrutura consegue, tambem analisar depois para melhorar
+    Ambiente DEV completo
     Hot reload
     Prisma Studio
     Build rápido
     Volumes montados
     Logs limpos
 
-    ✔ Ambiente PROD otimizado
-
+     Ambiente PROD otimizado
     Imagem pequena
     Node rodando só build final
     Redis com config real
     Postgres com init
     RabbitMQ seguro
     Volumes persistentes
-
-    ✔ Docker em nível profissional
+Ajustar depois tambem os private toResponse do service para tudo num local 

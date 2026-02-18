@@ -12,4 +12,10 @@ export class SeatRepository implements ISeatRepository {
       orderBy: { seatNumber: 'asc' },
     });
   }
+  // 🔹 Buscar assento por ID
+  async findById(id: string) {
+    return this.prisma.seat.findUnique({
+      where: { id },
+    });
+  }
 }
