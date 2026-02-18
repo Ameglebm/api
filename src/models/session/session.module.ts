@@ -18,6 +18,6 @@ import { SESSION_REPOSITORY, SESSION_SERVICE } from './session.constants';
       useClass: SessionRepository,
     },
   ],
-  exports: [SESSION_SERVICE],
+  exports: [SESSION_SERVICE, SESSION_REPOSITORY],
 })
 export class SessionModule {}
