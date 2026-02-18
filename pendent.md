@@ -16,7 +16,7 @@
     RabbitMQ → Consumer (processa evento em background) --- OK
 
 2° Verificar se tem ordem de implementação --- OK
-3° Fazer a base e analisar o --- _Começar agora esse bora_
+3° Fazer a base e analisar o --- Ok
     prismaService => conecta com banco,
     RedisService => lock atomico,
     RabittmqServuce => enfileira| consome eventos
@@ -92,10 +92,10 @@ Por quê Redis + Postgres juntos?
     Payment: orquestra o fluxo (valida, cria venda, atualiza assento)
     Sale: só armazena o registro permanente
     5. Edge cases cobertos
-    ✅ Race condition: Redis SET NX garante que só 1 processo adquire o lock
-    ✅ Expiração: TTL de 30s no Redis libera automaticamente
-    ✅ Deadlock: não acontece porque cada reserva trava 1 assento por vez, sem ordem fixa
-    ✅ Idempotência: se o cliente reenviar a mesma requisição, o Redis retorna 409 Conflict (lock já existe)
+     Race condition: Redis SET NX garante que só 1 processo adquire o lock
+     Expiração: TTL de 30s no Redis libera automaticamente
+     Deadlock: não acontece porque cada reserva trava 1 assento por vez, sem ordem fixa
+     Idempotência: se o cliente reenviar a mesma requisição, o Redis retorna 409 Conflict (lock já existe)
 
     separar em arquivos diferentes? verificar se há necessidade
         Porque cada publisher representa um domínio específico da aplicação:
@@ -103,3 +103,79 @@ Por quê Redis + Postgres juntos?
         Ticket → domínio de ingressos
         Payment → domínio financeiro
         Notificação → domínio de alertas
+
+    feat: add infra base services
+
+    - PrismaService: conexão com PostgreSQL via Prisma 7
+    - RedisService: lock atômico SET NX TTL 30s
+    - RabbitMQService: publisher e consumer de eventos
+
+    ✅ 1. Sobre usar redis-server /usr/local/etc/redis/redis.conf
+
+    Você me perguntou:
+    o que ganho com isso, o que melhora?
+    📌 Ganha controle fino sobre o Redis.
+    A imagem oficial do Redis, sem config file, roda 100% no modo padrão, que é bom, mas limitado.
+    Ao definir seu redis.conf, você pode:
+    Benefícios técnicos reais
+
+    ✔ Evitar perda de dados acidental
+    Você pode desativar RDB/AOF caso não precise (em dev).
+    Ou ativar snapshots com frequência controlada (em prod).
+
+    ✔ Controlar memória, TTL, eviction policy
+    Essencial em sistemas que usam locks com TTL, como seu módulo Reservation.
+
+    Exemplo:
+    maxmemory 256mb
+    maxmemory-policy allkeys-lru
+
+    ✔ Ativar/Desativar AOF para performance
+    AOF deixa persistente mas é mais lento.
+
+    ✔ Remover o warning "using default config"
+    Só cosmético, mas fica limpo.
+
+    ✔ Ter configurações diferentes para DEV vs PROD
+    Dev: persistência off, máximo desempenho.
+    Prod: snapshots, AOF, limites de memória, tuning.
+
+    📌 Resumo direto
+
+    Para seu projeto agora:
+    Não é obrigatório, mas é recomendado quando for para PROD.
+    Hoje: pode ignorar.
+    Profissionalizando: vale muito a pena.
+    mande para mim de uma forma mais simples para eu colocar o que pode melhorar aqui q eu vi e tals e o que eu pensei okay
+    tambem escalar 
+    /docker
+        redis/
+            redis.conf
+        postgres/
+            init.sql
+    docker-compose.yml
+    docker-compose.dev.yml
+    docker-compose.prod.yml
+    
+    🎯 Resultado final
+
+    Com essa estrutura você tem:
+
+    ✔ Ambiente DEV completo
+
+    Hot reload
+    Prisma Studio
+    Build rápido
+    Volumes montados
+    Logs limpos
+
+    ✔ Ambiente PROD otimizado
+
+    Imagem pequena
+    Node rodando só build final
+    Redis com config real
+    Postgres com init
+    RabbitMQ seguro
+    Volumes persistentes
+
+    ✔ Docker em nível profissional

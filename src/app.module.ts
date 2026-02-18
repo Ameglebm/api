@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller'; // ← FALTOU IMPORTAR
+import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerModule } from './common/logger/logger.module';
 import { RedisModule } from './infra/redis/redis.module';
