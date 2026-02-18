@@ -134,9 +134,7 @@ Por quê Redis + Postgres juntos?
     Prod: snapshots, AOF, limites de memória, tuning.
 
  o dResumireto
-    N é obrigatório mas e recomendado
-    Hoje: pode ignorar.
-    tambem escalar 
+    N é obrigatório mas pode ser adicionado depois
     /docker
         redis/
             redis.conf
@@ -146,8 +144,8 @@ Por quê Redis + Postgres juntos?
     docker-compose.dev.yml
     docker-compose.prod.yml
     
-    Com essa estrutura você tem:
-     Ambiente DEV completo
+    esta estrutura consegue, tambem analisar depois para melhorar
+    Ambiente DEV completo
     Hot reload
     Prisma Studio
     Build rápido
