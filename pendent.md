@@ -22,7 +22,7 @@
     RabittmqServuce => enfileira| consome eventos
     OBS: começar por aqui, pq todos os modulos dependem desse para funcionar
     
-4° OR 2° Session(crud simples, sem redis para testar inicialmente)
+4° OR 2° Session(crud simples, sem redis para testar inicialmente) --- OK
     DTOs (create, response)
     Interfaces (repository, service)
     Repository (Prisma queries)
@@ -30,7 +30,7 @@
     Controller (endpoints REST)
     é o mais simples — não tem lock, não tem evento, só CRUD puro. Serve pra testar se o Prisma tá funcionando.
 
-5° Seat (consulta com Redis)
+5° Seat (consulta com Redis) --- OK
     DTOs (response)
     Interfaces
     Repository (busca no Postgres)
