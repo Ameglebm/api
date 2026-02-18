@@ -1,0 +1,29 @@
+    separar em arquivos diferentes? verificar se há necessidade
+        Porque cada publisher representa um domínio específico da aplicação:
+        ? → domínio de comunicação
+        Ticket → domínio de ingressos
+        Payment → domínio financeiro
+        Notificação → domínio de alertas
+                                                Analisar tudo ...
+    Cada domínio tem:
+        Suas próprias filas
+        Suas próprias mensagens
+        Seus próprios consumers
+        
+        events/
+    publishers/
+      send-email.publisher.ts          # envia mensagens de email
+      generate-ticket.publisher.ts     # envia mensagens de ticket
+      notify-user.publisher.ts         # envia notificações push
+      start-payment.publisher.ts       # inicia processamento de pagamento
+
+    consumers/
+      send-email.consumer.ts           # processa emails
+      generate-ticket.consumer.ts      # processa ticket
+      notify-user.consumer.ts          # processa notificações
+      start-payment.consumer.ts        # processa pagamentos
+
+    Separar publishers por ação é o padrão correto em microserviços e mensageria.
+    Você separa publishers pela intenção da mensagem (“send”, “generate”, “process”, “create”, “notify”, “start”, etc.).
+
+    verificar sobre potairner

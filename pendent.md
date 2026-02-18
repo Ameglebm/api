@@ -13,10 +13,10 @@
     Service → RedisService (lock temporário 30s)
     Service → Publisher (enfileira evento)
         ↓
-    RabbitMQ → Consumer (processa evento em background)
+    RabbitMQ → Consumer (processa evento em background) --- OK
 
-2° Verificar se tem ordem de implementação
-3° Fazer a base e analisar o 
+2° Verificar se tem ordem de implementação --- OK
+3° Fazer a base e analisar o --- _Começar agora esse bora_
     prismaService => conecta com banco,
     RedisService => lock atomico,
     RabittmqServuce => enfileira| consome eventos
@@ -96,3 +96,10 @@ Por quê Redis + Postgres juntos?
     ✅ Expiração: TTL de 30s no Redis libera automaticamente
     ✅ Deadlock: não acontece porque cada reserva trava 1 assento por vez, sem ordem fixa
     ✅ Idempotência: se o cliente reenviar a mesma requisição, o Redis retorna 409 Conflict (lock já existe)
+
+    separar em arquivos diferentes? verificar se há necessidade
+        Porque cada publisher representa um domínio específico da aplicação:
+        ? → domínio de comunicação
+        Ticket → domínio de ingressos
+        Payment → domínio financeiro
+        Notificação → domínio de alertas
