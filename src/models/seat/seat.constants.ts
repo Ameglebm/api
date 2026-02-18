@@ -1,0 +1,2 @@
+export const SEAT_REPOSITORY = 'SEAT_REPOSITORY';
+export const SEAT_SERVICE = 'SEAT_SERVICE';

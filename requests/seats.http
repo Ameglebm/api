@@ -1,0 +1,25 @@
+@baseUrl = http://localhost:3000
+
+### [1] Criar sessão para teste  ← rode isso primeiro
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Avatar: O Caminho da Água",
+  "room": "Sala 3",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [2] Listar assentos da sessão criada
+@sessionId = {{createSession.response.body.id}}
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [3] ID de sessão inexistente → 404
+GET {{baseUrl}}/seats/id-invalido
