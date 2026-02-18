@@ -1,0 +1,77 @@
+@baseUrl = http://localhost:3000
+
+### [1] Criar sessão para teste  ← rode isso primeiro
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Avatar: O Caminho da Água",
+  "room": "Sala 3",
+  "startsAt": "2026-02-20T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [2] Listar assentos da sessão  ← rode isso segundo para pegar o seatId
+@sessionId = {{createSession.response.body.id}}
+# @name listSeats
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [3] Criar reserva
+# @name createReservation
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{listSeats.response.body.$.0.id}}",
+  "userId": "usuario-001"
+}
+
+###
+
+### [4] Buscar reserva por ID
+@reservationId = {{createReservation.response.body.id}}
+GET {{baseUrl}}/reservations/{{reservationId}}
+
+###
+
+### [5] Buscar reservas por usuário
+GET {{baseUrl}}/reservations/user/usuario-001
+
+###
+
+### [6] Tentar reservar o mesmo assento em menos de 30 segundos, send 2 vezes em 30s, 1 da status 200 e 2 da → 409
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "e806b668-c988-4c50-a20b-ceab7b49d3ce",
+  "userId": "usuario-002"
+}
+
+###
+
+### [7] Assento inexistente → 404
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "00000000-0000-0000-0000-000000000000",
+  "userId": "00000000-0000-0000-0000-000000000001"
+}
+
+###
+
+### [8] Campo inválido → 400
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000099",
+  "userId": "usuario-001"
+}
