@@ -22,7 +22,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.useGlobalFilters(new HttpExceptionFilter());
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Cinema API')
