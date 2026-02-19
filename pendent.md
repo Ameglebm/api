@@ -250,3 +250,13 @@ payment.publisher.ts     → tem PaymentConfirmedEvent dentro dele
 tirar de dentro deles e colocar tudo num arquivo só events.types.ts → tem TODAS as interfaces aqui, depois ajusta isso se der tempo
 
 O LoggerModule é @Global() e o LoggerService é @Injectable() sem escopo — isso significa singleton uma única instância pra aplicação inteira entao da isso em tudo, pqp kkkkkk q mole ...kkkkk
+
+vamos criar testes eu vou separar por pastas nao vai ser necessario pasta securiti pq n tem autenticacao.
+vai ser assim 
+unit > testa cada service isolado (com mocks)
+contract > testa shape dos DTOs e status codes dos controllers
+flow > testa fluxos completos
+
+unit/Um service sozinho, métodos isolados, Sim tudo mockado "Se reserva não existe lança 404"
+contract/Controller recebe X responde com shape Y e status Z Sim "POST /sessions retorna 201 com id, movie, room"
+flow/Vários services juntos num fluxo real Sim mas menos "Reserva → paga → seat vira SOLD → sale aparece no histórico"
