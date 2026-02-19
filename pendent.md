@@ -159,4 +159,12 @@ Por quê Redis + Postgres juntos?
     Postgres com init
     RabbitMQ seguro
     Volumes persistentes
-Ajustar depois tambem os private toResponse do service para tudo num local 
+Ajustar depois tambem os private toResponse do service para tudo num local
+
+contruir agora
+    Recebe o reservationId
+    Valida se a reserva existe e ainda não expirou
+    Converte reserva em venda — cria Sale no Postgres
+    Atualiza status do assento para SOLD
+    Libera o lock do Redis com releaseLock
+    Publica payment.confirmed no RabbitMQ
