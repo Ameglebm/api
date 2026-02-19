@@ -8,6 +8,7 @@ import { PrismaModule } from './infra/prisma/prisma.module';
 import { SessionModule } from './models/session/session.module';
 import { SeatModule } from './models/seat/seat.module';
 import { ReservationModule } from './models/reservation/reservation.module';
+import { PaymentModule } from './models/payment/payment.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ReservationModule } from './models/reservation/reservation.module';
     SessionModule,
     SeatModule,
     ReservationModule,
+    PaymentModule,
   ], // ← aqui vai entrar PrismaModule, RedisModule, etc.
   controllers: [AppController],
   providers: [AppService],

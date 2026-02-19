@@ -159,4 +159,41 @@ Por quê Redis + Postgres juntos?
     Postgres com init
     RabbitMQ seguro
     Volumes persistentes
-Ajustar depois tambem os private toResponse do service para tudo num local 
+Ajustar depois tambem os private toResponse do service para tudo num local
+
+contruir agora
+    Recebe o reservationId
+    Valida se a reserva existe e ainda não expirou
+    Converte reserva em venda — cria Sale no Postgres
+    Atualiza status do assento para SOLD
+    Libera o lock do Redis com releaseLock
+    Publica payment.confirmed no RabbitMQ
+
+Payment
+1. Usuário escolhe assento → POST /reservations
+   → Redis trava o assento (lock 30s)
+   → Banco cria Reservation com status PENDING
+   → Resposta: "teu reservationId é X, tu tem 30 segundos"
+
+2. Dentro dos 30 segundos → POST /payments/confirm/:reservationId
+   → Sistema checa: "ainda tá dentro dos 30s?"
+   → SIM → confirma tudo: Reservation→CONFIRMED, Seat→SOLD, cria Sale
+   → NÃO → 410 Gone "expirou, perdeu"
+
+3. Se o usuário NÃO confirmar em 30s:
+   → Redis libera o lock sozinho (TTL expirou)
+   → Consumer do RabbitMQ marca Reservation como EXPIRED
+   → Assento volta a ficar disponível pra outros
+Analisar sobre passar no repository ou não mesmo por conta dos outros serviços se não funcionar? analisar depois novamente e executar<TESTES> importante não deixar de testar aqui!!!
+
+O que acontece quando o pagamento é confirmado
+São 3 coisas que mudam no banco ao mesmo tempo:
+ANTES do pagamento:
+  Reservation → status: PENDING    (esperando pagamento)
+  Seat        → status: RESERVED   (travado pro usuário)
+  Sale        → não existe ainda
+
+DEPOIS do pagamento confirmado:
+  Reservation → status: CONFIRMED  (pagamento feito)
+  Seat        → status: SOLD       (vendido, ninguém mais pode comprar)
+  Sale        → criada agora       (registro permanente: quem comprou, quando, qual assento)
