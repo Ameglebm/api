@@ -5,7 +5,7 @@ import { ISessionRepository } from '../../src/models/session/interface/session.r
 import { SESSION_REPOSITORY } from '../../src/models/session/session.constants';
 import { SeatStatus } from '../../src/common/enums/seat-status.enum';
 
-// ─── Dados fake reutilizáveis 
+// ─── Dados fake reutilizáveis
 const mockSession = {
   id: 'session-001',
   movie: 'Interestelar',
@@ -45,7 +45,7 @@ describe('SessionService', () => {
       providers: [
         SessionService,
         {
-          provide: SESSION_REPOSITORY,    // token
+          provide: SESSION_REPOSITORY, // token
           useValue: mockSessionRepository, // objeto fake no lugar do real
         },
       ],
@@ -82,7 +82,10 @@ describe('SessionService', () => {
       expect(repository.create).toHaveBeenCalledWith(
         mockCreateDto,
         expect.arrayContaining([
-          expect.objectContaining({ seatNumber: 'A1', status: SeatStatus.AVAILABLE }),
+          expect.objectContaining({
+            seatNumber: 'A1',
+            status: SeatStatus.AVAILABLE,
+          }),
         ]),
       );
     });
