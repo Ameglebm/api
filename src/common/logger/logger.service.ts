@@ -36,24 +36,24 @@ export class LoggerService implements NestLoggerService {
 
   private readonly contextThemes: Record<string, { badge: string; color: string }> = {
     // Infra
-    RedisService:          { badge: '🔴', color: this.c.red },
+    RedisService:          { badge: '🟢', color: this.c.bGreen },   // verde = conectado/online
     RabbitMQService:       { badge: '🐇', color: this.c.magenta },
-    PrismaService:         { badge: '💎', color: this.c.bBlue },
+    PrismaService:         { badge: '🗄️', color: this.c.bBlue },    // banco/storage
     // Domínio
     SessionService:        { badge: '🎬', color: this.c.green },
     SessionRepository:     { badge: '🎬', color: this.c.green },
-    SeatService:           { badge: '💺', color: this.c.cyan },
-    SeatRepository:        { badge: '💺', color: this.c.cyan },
-    ReservationService:    { badge: '🎫', color: this.c.blue },
-    ReservationRepository: { badge: '🎫', color: this.c.blue },
+    SeatService:           { badge: '🪑', color: this.c.cyan },      // cadeira mais clara
+    SeatRepository:        { badge: '🪑', color: this.c.cyan },
+    ReservationService:    { badge: '🗒️', color: this.c.bMagenta }, // bloco de notas/reserva — diferente do pagamento
+    ReservationRepository: { badge: '🗒️', color: this.c.bMagenta },
     PaymentService:        { badge: '💳', color: this.c.yellow },
     SaleService:           { badge: '🧾', color: this.c.bGreen },
     SaleRepository:        { badge: '🧾', color: this.c.bGreen },
-    // Events
-    ReservationPublisher:  { badge: '🎫 📤', color: this.c.bMagenta },
-    ReservationConsumer:   { badge: '🎫 📥', color: this.c.bMagenta },
-    PaymentPublisher:      { badge: '💳 📤', color: this.c.bYellow },
-    PaymentConsumer:       { badge: '💳 📥', color: this.c.bYellow },
+    // Events — 📡 publisher (emite), 📻 consumer (recebe)
+    ReservationPublisher:  { badge: '🗒️ 📡', color: this.c.bMagenta },
+    ReservationConsumer:   { badge: '🗒️ 📻', color: this.c.bMagenta },
+    PaymentPublisher:      { badge: '💳 📡', color: this.c.bYellow },
+    PaymentConsumer:       { badge: '💳 📻', color: this.c.bYellow },
   };
 
   setContext(context: string) {
@@ -101,9 +101,9 @@ export class LoggerService implements NestLoggerService {
       `${c.bold}${c.bCyan}${message}${c.reset}`,
     ].join(' ');
 
-    // Metadata indentada e discreta
+    // Metadata — negrito + branco puro, bem legível
     const metaLine = metadata && Object.keys(metadata).length > 0
-      ? `\n${c.dim}${JSON.stringify(metadata, null, 2)
+      ? `\n${c.bold}\x1b[97m${JSON.stringify(metadata, null, 2)
           .split('\n')
           .map(l => `         ${l}`)
           .join('\n')}${c.reset}`
