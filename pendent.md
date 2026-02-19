@@ -274,3 +274,5 @@ ReservationService → SeatRepository (verifica assento)
                    → ReservationRepository (cria no banco)
                    → RabbitMQService (publica evento)
                    importante esse teste
+Realizar testes Eslint e tambem formatar com Eslint e prettier
+Criar documentação README.md completa 

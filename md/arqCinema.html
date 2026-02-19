@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cinema API — A História de Um Ingresso</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --border: #2a2a3a;
+  --gold: #f0c040;
+  --gold-dim: #a08020;
+  --red: #ff4757;
+  --green: #2ed573;
+  --blue: #3742fa;
+  --cyan: #00d2d3;
+  --purple: #a55eea;
+  --orange: #ff6348;
+  --pink: #ff6b81;
+  --text: #e8e8f0;
+  --muted: #6a6a80;
+  --font-display: 'Playfair Display', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  padding: 2rem;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 50% 40%, rgba(240,192,64,0.08), transparent),
+    radial-gradient(ellipse 300px 300px at 20% 80%, rgba(167,94,234,0.05), transparent),
+    radial-gradient(ellipse 300px 300px at 80% 20%, rgba(255,71,87,0.05), transparent);
+  pointer-events: none;
+}
+.hero-ticket {
+  width: 320px;
+  margin-bottom: 2rem;
+  animation: floatTicket 4s ease-in-out infinite;
+}
+.ticket-svg { filter: drop-shadow(0 20px 60px rgba(240,192,64,0.3)); }
+@keyframes floatTicket { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-16px) rotate(2deg)} }
+
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.3s forwards;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: #fff;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
+.hero h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-top: 1rem;
+  max-width: 500px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.7s forwards;
+}
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.9s forwards;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--gold);
+}
+.hero-stat-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 0.2rem;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+.scroll-hint::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: var(--gold-dim);
+  margin: 0.5rem auto 0;
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine { 0%{height:10px;opacity:0.3} 50%{height:30px;opacity:1} 100%{height:10px;opacity:0.3} }
+@keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══ SCENE ═══ */
+.scene {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+  position: relative;
+}
+.scene-num {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--surface2);
+  position: absolute;
+  top: 4rem;
+  left: -1rem;
+  user-select: none;
+  line-height: 1;
+}
+.scene-header {
+  margin-bottom: 2rem;
+  position: relative;
+}
+.scene-tag {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--scene-color, var(--gold));
+  margin-bottom: 0.5rem;
+}
+.scene-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+}
+.scene-title em {
+  font-style: italic;
+  color: var(--scene-color, var(--gold));
+}
+.scene-body {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 640px;
+}
+.scene-body strong { color: var(--text); font-weight: 600; }
+.scene-body em { color: var(--scene-color, var(--gold)); font-style: normal; font-weight: 600; }
+
+.divider {
+  width: 60px;
+  height: 2px;
+  background: var(--border);
+  margin: 3rem 0;
+}
+
+/* ═══ DRAMA BOX ═══ */
+.drama-box {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  background: var(--surface);
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.drama-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--drama-color, var(--gold)), transparent);
+}
+
+/* ═══ RACE ANIMATION ═══ */
+.race-arena {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+.race-lane {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+.racer {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  position: relative;
+}
+.racer-a { background: rgba(46,213,115,0.15); border: 2px solid var(--green); }
+.racer-b { background: rgba(255,71,87,0.15); border: 2px solid var(--red); }
+.race-track {
+  flex: 1;
+  height: 40px;
+  background: var(--surface2);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.race-bar {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+}
+.race-bar-a {
+  background: linear-gradient(90deg, var(--green), #27ae60);
+  animation: raceA 3s ease-in-out infinite;
+}
+.race-bar-b {
+  background: linear-gradient(90deg, var(--red), #c0392b);
+  animation: raceB 3s ease-in-out infinite;
+}
+@keyframes raceA { 0%{width:0%} 40%{width:95%} 100%{width:95%} }
+@keyframes raceB { 0%{width:0%} 35%{width:60%} 40%{width:60%} 100%{width:60%} }
+.race-result {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.result-win { background: rgba(46,213,115,0.2); color: var(--green); animation: popIn 0.3s ease 1.5s both; }
+.result-block { background: rgba(255,71,87,0.2); color: var(--red); animation: popIn 0.3s ease 1.8s both; }
+@keyframes popIn { from{opacity:0;transform:translateY(-50%) scale(0.5)} to{opacity:1;transform:translateY(-50%) scale(1)} }
+
+.race-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  width: 60px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ═══ TIMELINE ═══ */
+.timeline {
+  position: relative;
+  padding-left: 3rem;
+  margin: 2rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item {
+  position: relative;
+  padding: 1rem 0 1.5rem;
+}
+.tl-dot {
+  position: absolute;
+  left: -3rem;
+  top: 1.2rem;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  z-index: 1;
+}
+.tl-time {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+}
+.tl-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+.tl-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.tl-desc strong { color: var(--text); }
+
+/* ═══ CODE BLOCK ═══ */
+.code-block {
+  background: #0d0d14;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.8;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.code-block .c-comment { color: #4a4a60; }
+.code-block .c-keyword { color: var(--purple); }
+.code-block .c-string { color: var(--green); }
+.code-block .c-func { color: var(--cyan); }
+.code-block .c-num { color: var(--orange); }
+.code-block .c-var { color: var(--gold); }
+
+/* ═══ PERSONA CARDS ═══ */
+.personas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+.persona {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  background: var(--surface);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.persona:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px -12px var(--persona-color, var(--gold));
+}
+.persona-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+.persona-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+.persona-role {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--persona-color, var(--gold));
+  margin-bottom: 0.8rem;
+}
+.persona-desc {
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ═══ COUNTER STRIP ═══ */
+.counter-strip {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 3rem 2rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 4rem 0;
+}
+.counter {
+  text-align: center;
+}
+.counter-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.counter-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* ═══ STACK CARDS ═══ */
+.stack-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.stack-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.3rem;
+  background: var(--surface);
+  text-align: center;
+  transition: all 0.3s;
+}
+.stack-card:hover {
+  border-color: var(--stack-color, var(--border));
+  box-shadow: 0 0 24px -8px var(--stack-color, var(--gold));
+  transform: translateY(-4px);
+}
+.stack-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.stack-name {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+.stack-what {
+  font-size: 0.62rem;
+  color: var(--stack-color, var(--muted));
+  font-family: var(--font-mono);
+}
+
+/* ═══ TIMER ANIMATION ═══ */
+.timer-visual {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.timer-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.timer-circle svg {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 106px;
+  height: 106px;
+  transform: rotate(-90deg);
+}
+.timer-circle svg circle {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 0;
+  animation: timerDrain 4s linear infinite;
+  stroke-linecap: round;
+}
+@keyframes timerDrain { 0%{stroke-dashoffset:0;stroke:var(--green)} 70%{stroke:var(--gold)} 100%{stroke-dashoffset:314;stroke:var(--red)} }
+.timer-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fff;
+}
+.timer-unit {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+.timer-info {
+  flex: 1;
+}
+.timer-info h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+.timer-info p {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ═══ JOURNEY MAP ═══ */
+.journey {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 2rem 0;
+  position: relative;
+}
+.journey-step {
+  flex: 1;
+  padding: 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+  position: relative;
+}
+.journey-step:first-child { border-radius: 12px 0 0 12px; }
+.journey-step:last-child { border-radius: 0 12px 12px 0; }
+.journey-step::after {
+  content: '→';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  font-size: 1.2rem;
+  z-index: 2;
+}
+.journey-step:last-child::after { display: none; }
+.journey-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+.journey-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+.journey-detail {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--muted);
+}
+
+/* ═══ TEST TROPHY ═══ */
+.trophy-section {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+.trophy-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: floatTicket 3s ease-in-out infinite;
+}
+.trophy-num {
+  font-family: var(--font-display);
+  font-size: 6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.trophy-label {
+  font-size: 1.4rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+.trophy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 700px;
+  margin: 2rem auto 0;
+}
+.trophy-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  background: var(--surface);
+}
+.trophy-card-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--green);
+}
+.trophy-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ═══ PR TIMELINE ═══ */
+.pr-timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+.pr-block {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: all 0.3s;
+  cursor: default;
+}
+.pr-block:hover {
+  transform: scale(1.08);
+  border-color: var(--pr-color, var(--gold));
+  box-shadow: 0 0 20px -4px var(--pr-color, var(--gold));
+}
+.pr-num {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--pr-color, var(--gold));
+}
+.pr-label {
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  margin-top: 0.15rem;
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align: center;
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--border);
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #fff;
+}
+.footer-logo em {
+  font-style: italic;
+  color: var(--gold);
+}
+.footer-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  letter-spacing: 0.15em;
+}
+.footer-stack {
+  margin-top: 1rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-ticket">
+    <svg class="ticket-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 0h280a20 20 0 0120 20v30a20 20 0 000 40v30a20 20 0 01-20 20H20A20 20 0 010 120V90a20 20 0 000-40V20A20 20 0 0120 0z" fill="#1a1a26" stroke="#f0c040" stroke-width="1.5"/>
+      <line x1="220" y1="10" x2="220" y2="130" stroke="#f0c040" stroke-width="1" stroke-dasharray="6 4" opacity="0.4"/>
+      <text x="110" y="50" text-anchor="middle" fill="#fff" font-family="Playfair Display" font-size="16" font-weight="900">CINEMA API</text>
+      <text x="110" y="72" text-anchor="middle" fill="#f0c040" font-family="JetBrains Mono" font-size="9" letter-spacing="2">ADMIT ONE</text>
+      <text x="110" y="100" text-anchor="middle" fill="#6a6a80" font-family="JetBrains Mono" font-size="7">SEAT A1 · SALA 7 · 19:00</text>
+      <text x="270" y="55" text-anchor="middle" fill="#f0c040" font-family="Playfair Display" font-size="28" font-weight="900">A1</text>
+      <text x="270" y="75" text-anchor="middle" fill="#6a6a80" font-family="JetBrains Mono" font-size="7">SALA 7</text>
+      <text x="270" y="100" text-anchor="middle" fill="#6a6a80" font-family="JetBrains Mono" font-size="7">R$ 25,00</text>
+    </svg>
+  </div>
+  <div class="hero-tag">A história de um ingresso que não pode ser vendido duas vezes</div>
+  <h1>Cinema <em>API</em></h1>
+  <p class="hero-sub">Um sistema distribuído onde cada assento tem 30 segundos para ser comprado — e nenhum milissegundo de margem para erro.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">13</div><div class="hero-stat-label">Pull Requests</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">88</div><div class="hero-stat-label">Testes</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">6</div><div class="hero-stat-label">Containers</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">30s</div><div class="hero-stat-label">TTL do Lock</div></div>
+  </div>
+  <div class="scroll-hint">Rolar para baixo</div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 1: O PROBLEMA -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--red);">
+  <div class="scene-num">01</div>
+  <div class="scene-header">
+    <div class="scene-tag">O Problema</div>
+    <div class="scene-title">Dois clientes, <em>um assento</em></div>
+  </div>
+  <div class="scene-body">
+    <p>Imagine um cinema com 500 pessoas olhando o mesmo assento A1 da pré-estreia de Interestelar. Às 19:00:00.000, <strong>dois dedos clicam "Reservar" exatamente ao mesmo tempo</strong>.</p>
+    <p style="margin-top:1rem;">Sem controle, os dois recebem "Reservado com sucesso". Dois ingressos, um assento. Um deles chega no cinema e descobre que o lugar é de outra pessoa.</p>
+    <p style="margin-top:1rem;">Esse é o problema de <em>race condition</em> — e é o problema que esse sistema resolve.</p>
+  </div>
+
+  <div class="drama-box" style="--drama-color: var(--red);">
+    <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:#fff;margin-bottom:1.2rem;">A Corrida pelo Assento A1</div>
+    <div class="race-arena">
+      <div class="race-lane">
+        <div class="race-label">Usuário A</div>
+        <div class="racer racer-a">👤</div>
+        <div class="race-track">
+          <div class="race-bar race-bar-a">SET NX → OK</div>
+          <div class="race-result result-win">✓ 201 RESERVADO</div>
+        </div>
+      </div>
+      <div class="race-lane">
+        <div class="race-label">Usuário B</div>
+        <div class="racer racer-b">👤</div>
+        <div class="race-track">
+          <div class="race-bar race-bar-b">SET NX → FAIL</div>
+          <div class="race-result result-block">✗ 409 BLOQUEADO</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);margin-top:0.8rem;text-align:center;">Redis SET NX — operação atômica. Não existe "verificar e depois setar". É tudo ou nada no mesmo milissegundo.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 2: OS PERSONAGENS -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--cyan);">
+  <div class="scene-num">02</div>
+  <div class="scene-header">
+    <div class="scene-tag">Os Personagens</div>
+    <div class="scene-title">Cada um faz <em>uma coisa</em></div>
+  </div>
+  <div class="scene-body">
+    <p>O sistema foi dividido em personagens com responsabilidades únicas. Nenhum deles sabe como o outro funciona por dentro — só conhecem o <strong>contrato</strong> (a interface). Se um trocar de implementação, os outros nem percebem.</p>
+  </div>
+
+  <div class="personas">
+    <div class="persona" style="--persona-color: #58a6ff;">
+      <div class="persona-icon">📋</div>
+      <div class="persona-name">Session</div>
+      <div class="persona-role">A Raiz</div>
+      <div class="persona-desc">Cria a sessão de cinema e gera automaticamente todos os assentos. Sem ela, nada existe. É o ponto de partida de tudo.</div>
+    </div>
+    <div class="persona" style="--persona-color: var(--gold);">
+      <div class="persona-icon">💺</div>
+      <div class="persona-name">Seat</div>
+      <div class="persona-role">O Recurso Disputado</div>
+      <div class="persona-desc">O assento que todo mundo quer. Cruza Postgres + Redis para saber em tempo real se está livre, reservado ou vendido.</div>
+    </div>
+    <div class="persona" style="--persona-color: var(--orange);">
+      <div class="persona-icon">🎟️</div>
+      <div class="persona-name">Reservation</div>
+      <div class="persona-role">O Guardião dos 30s</div>
+      <div class="persona-desc">Segura o assento por 30 segundos com lock no Redis. Se o pagamento não chegar a tempo, libera automaticamente.</div>
+    </div>
+    <div class="persona" style="--persona-color: var(--green);">
+      <div class="persona-icon">💳</div>
+      <div class="persona-name">Payment</div>
+      <div class="persona-role">O Orquestrador</div>
+      <div class="persona-desc">Valida 4 condições, executa uma transaction atômica com 3 escritas, libera o lock e publica o evento. Tudo ou nada.</div>
+    </div>
+    <div class="persona" style="--persona-color: var(--purple);">
+      <div class="persona-icon">💰</div>
+      <div class="persona-name">Sale</div>
+      <div class="persona-role">O Registro Final</div>
+      <div class="persona-desc">Só leitura. Consulta o histórico de compras com dados completos — filme, sala, assento, preço, horário. Uma query, tudo incluído.</div>
+    </div>
+    <div class="persona" style="--persona-color: var(--pink);">
+      <div class="persona-icon">📨</div>
+      <div class="persona-name">Events</div>
+      <div class="persona-role">Os Mensageiros</div>
+      <div class="persona-desc">Publishers enfileiram, Consumers processam. A expiração automática acontece aqui — sem cron job, sem polling.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 3: A JORNADA DO INGRESSO -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--gold);">
+  <div class="scene-num">03</div>
+  <div class="scene-header">
+    <div class="scene-tag">A Jornada</div>
+    <div class="scene-title">Do clique à <em>venda</em></div>
+  </div>
+  <div class="scene-body">
+    <p>Cada ingresso percorre um caminho preciso — da criação da sessão até o registro permanente da venda. Qualquer falha no meio do caminho resulta em rollback automático.</p>
+  </div>
+
+  <div class="journey">
+    <div class="journey-step">
+      <div class="journey-icon">📋</div>
+      <div class="journey-name">Session</div>
+      <div class="journey-detail">POST /sessions<br/>gera assentos</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-icon">💺</div>
+      <div class="journey-name">Seat</div>
+      <div class="journey-detail">GET /seats/:id<br/>status tempo real</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-icon">🔒</div>
+      <div class="journey-name">Lock</div>
+      <div class="journey-detail">Redis SET NX<br/>TTL 30s</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-icon">🎟️</div>
+      <div class="journey-name">Reserva</div>
+      <div class="journey-detail">POST /reservations<br/>status PENDING</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-icon">💳</div>
+      <div class="journey-name">Pagamento</div>
+      <div class="journey-detail">POST /payments<br/>$transaction</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-icon">💰</div>
+      <div class="journey-name">Venda</div>
+      <div class="journey-detail">GET /sales<br/>registro final</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 4: O RELÓGIO -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--orange);">
+  <div class="scene-num">04</div>
+  <div class="scene-header">
+    <div class="scene-tag">O Relógio</div>
+    <div class="scene-title">30 segundos para <em>decidir</em></div>
+  </div>
+  <div class="scene-body">
+    <p>Quando alguém reserva um assento, o relógio começa a contar. O Redis segura o lock, o Consumer assiste. Se o pagamento não chegar em <em>30 segundos</em>, tudo é desfeito automaticamente — o assento volta ao mercado como se nada tivesse acontecido.</p>
+  </div>
+
+  <div class="drama-box" style="--drama-color: var(--orange);">
+    <div class="timer-visual">
+      <div class="timer-circle">
+        <svg><circle cx="53" cy="53" r="50"/></svg>
+        <div>
+          <div class="timer-num">30</div>
+          <div class="timer-unit">segundos</div>
+        </div>
+      </div>
+      <div class="timer-info">
+        <h4>Expiração Automática</h4>
+        <p>O Consumer recebe o evento <strong>reservation.created</strong>, calcula quanto falta pro <strong>expiresAt</strong>, espera o tempo exato, e verifica se ainda está PENDING. Se sim: expira tudo. Se o pagamento já chegou: ignora. Sem cron job, sem polling — o consumer já sabe <strong>quem</strong> vai expirar e <strong>quando</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:rgba(46,213,115,0.15);border:2px solid var(--green);">🎟️</div>
+      <div class="tl-time">T + 0s</div>
+      <div class="tl-title">Reserva criada</div>
+      <div class="tl-desc">Lock adquirido no Redis · Reservation PENDING · evento publicado no RabbitMQ</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:rgba(240,192,64,0.15);border:2px solid var(--gold);">⏱️</div>
+      <div class="tl-time">T + 15s</div>
+      <div class="tl-title">Metade do tempo</div>
+      <div class="tl-desc">Consumer está esperando. O assento está <strong>isLocked: true</strong> no GET /seats. Ninguém mais consegue reservar.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:rgba(46,213,115,0.15);border:2px solid var(--green);">💳</div>
+      <div class="tl-time">T + 22s ✓</div>
+      <div class="tl-title">Cenário A: Pagamento chegou</div>
+      <div class="tl-desc">Transaction atômica executada → Seat SOLD → lock liberado → <strong>Sale criada</strong>. Consumer ignora quando chegar no T+30s (já CONFIRMED).</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:rgba(255,71,87,0.15);border:2px solid var(--red);">💀</div>
+      <div class="tl-time">T + 30s ✗</div>
+      <div class="tl-title">Cenário B: Tempo esgotou</div>
+      <div class="tl-desc">Consumer age: Reservation → <strong>EXPIRED</strong> · Seat → <strong>AVAILABLE</strong> · publica <strong>reservation.expired</strong>. Assento livre de novo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- COUNTER STRIP -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="counter-strip">
+  <div class="counter"><div class="counter-num">4</div><div class="counter-label">Models</div></div>
+  <div class="counter"><div class="counter-num">8</div><div class="counter-label">Endpoints</div></div>
+  <div class="counter"><div class="counter-num">6</div><div class="counter-label">Containers</div></div>
+  <div class="counter"><div class="counter-num">3</div><div class="counter-label">Filas</div></div>
+  <div class="counter"><div class="counter-num">4</div><div class="counter-label">Eventos</div></div>
+  <div class="counter"><div class="counter-num">13</div><div class="counter-label">PRs</div></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 5: A INFRAESTRUTURA -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--purple);">
+  <div class="scene-num">05</div>
+  <div class="scene-header">
+    <div class="scene-tag">A Infraestrutura</div>
+    <div class="scene-title">Cada ferramenta com <em>seu papel</em></div>
+  </div>
+  <div class="scene-body">
+    <p>Nenhuma ferramenta foi escolhida por moda. Cada uma resolve um problema específico que as outras não conseguem resolver sozinhas.</p>
+  </div>
+
+  <div class="stack-row">
+    <div class="stack-card" style="--stack-color:#58a6ff;">
+      <div class="stack-icon">🐘</div>
+      <div class="stack-name">PostgreSQL</div>
+      <div class="stack-what">Fonte de verdade</div>
+    </div>
+    <div class="stack-card" style="--stack-color:var(--orange);">
+      <div class="stack-icon">⚡</div>
+      <div class="stack-name">Redis</div>
+      <div class="stack-what">Lock atômico 30s</div>
+    </div>
+    <div class="stack-card" style="--stack-color:var(--purple);">
+      <div class="stack-icon">🐇</div>
+      <div class="stack-name">RabbitMQ</div>
+      <div class="stack-what">Eventos async</div>
+    </div>
+    <div class="stack-card" style="--stack-color:var(--cyan);">
+      <div class="stack-icon">🔷</div>
+      <div class="stack-name">Prisma</div>
+      <div class="stack-what">ORM type-safe</div>
+    </div>
+  </div>
+
+  <div class="stack-row">
+    <div class="stack-card" style="--stack-color:var(--green);">
+      <div class="stack-icon">🏗️</div>
+      <div class="stack-name">NestJS</div>
+      <div class="stack-what">Framework DI</div>
+    </div>
+    <div class="stack-card" style="--stack-color:var(--gold);">
+      <div class="stack-icon">🐳</div>
+      <div class="stack-name">Docker</div>
+      <div class="stack-what">6 containers</div>
+    </div>
+    <div class="stack-card" style="--stack-color:var(--pink);">
+      <div class="stack-icon">🧪</div>
+      <div class="stack-name">Jest</div>
+      <div class="stack-what">88 testes</div>
+    </div>
+    <div class="stack-card" style="--stack-color:var(--red);">
+      <div class="stack-icon">📘</div>
+      <div class="stack-name">Swagger</div>
+      <div class="stack-what">Docs interativas</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 6: TESTES -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--green);">
+  <div class="scene-num">06</div>
+  <div class="scene-header">
+    <div class="scene-tag">A Prova</div>
+    <div class="scene-title">88 testes. <em>Zero</em> falhas.</div>
+  </div>
+  <div class="scene-body">
+    <p>Três camadas de teste que se complementam: <strong>unitários</strong> isolam a lógica sem I/O, <strong>contracts</strong> validam os status codes via HTTP real, e <strong>flows</strong> testam fluxos completos incluindo race condition e expiração automática. Tudo roda em <em>3.7 segundos</em> — sem Docker, sem banco, sem Redis.</p>
+  </div>
+
+  <div class="trophy-section">
+    <div class="trophy-icon">🏆</div>
+    <div class="trophy-num">88</div>
+    <div class="trophy-label">testes passando</div>
+    <div class="trophy-grid">
+      <div class="trophy-card">
+        <div class="trophy-card-num">53</div>
+        <div class="trophy-card-label">Unit tests</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-card-num">20</div>
+        <div class="trophy-card-label">Contract tests</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-card-num">15</div>
+        <div class="trophy-card-label">Flow tests</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <span class="c-comment">// O teste mais importante: race condition</span><br/>
+    <span class="c-keyword">const</span> [<span class="c-var">result1</span>, <span class="c-var">result2</span>] = <span class="c-keyword">await</span> <span class="c-func">Promise.allSettled</span>([<br/>
+    &nbsp;&nbsp;<span class="c-var">reservationService</span>.<span class="c-func">create</span>({ <span class="c-var">seatId</span>: <span class="c-string">'seat-001'</span>, <span class="c-var">userId</span>: <span class="c-string">'usuario-001'</span> }),<br/>
+    &nbsp;&nbsp;<span class="c-var">reservationService</span>.<span class="c-func">create</span>({ <span class="c-var">seatId</span>: <span class="c-string">'seat-001'</span>, <span class="c-var">userId</span>: <span class="c-string">'usuario-002'</span> }),<br/>
+    ]);<br/><br/>
+    <span class="c-func">expect</span>(<span class="c-var">result1</span>.status).<span class="c-func">toBe</span>(<span class="c-string">'fulfilled'</span>); &nbsp;<span class="c-comment">// ✓ primeiro conseguiu</span><br/>
+    <span class="c-func">expect</span>(<span class="c-var">result2</span>.status).<span class="c-func">toBe</span>(<span class="c-string">'rejected'</span>);  &nbsp;<span class="c-comment">// ✗ segundo bloqueado</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENE 7: A JORNADA DAS PRs -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="scene" style="--scene-color: var(--gold);">
+  <div class="scene-num">07</div>
+  <div class="scene-header">
+    <div class="scene-tag">A Construção</div>
+    <div class="scene-title">13 Pull Requests, <em>uma história</em></div>
+  </div>
+  <div class="scene-body">
+    <p>Cada PR foi construída em cima da anterior, numa ordem pensada para que o módulo anterior validasse o funcionamento antes do próximo ser construído. Nenhuma dependência circular, nenhum retrabalho.</p>
+  </div>
+
+  <div class="pr-timeline">
+    <div class="pr-block" style="--pr-color:var(--muted);"><div class="pr-num">#1</div><div class="pr-label">Init</div></div>
+    <div class="pr-block" style="--pr-color:#58a6ff;"><div class="pr-num">#2</div><div class="pr-label">Arquitetura</div></div>
+    <div class="pr-block" style="--pr-color:var(--cyan);"><div class="pr-num">#3</div><div class="pr-label">Infra</div></div>
+    <div class="pr-block" style="--pr-color:#58a6ff;"><div class="pr-num">#4</div><div class="pr-label">Session</div></div>
+    <div class="pr-block" style="--pr-color:var(--gold);"><div class="pr-num">#5</div><div class="pr-label">Seat</div></div>
+    <div class="pr-block" style="--pr-color:var(--orange);"><div class="pr-num">#6</div><div class="pr-label">Reservation</div></div>
+    <div class="pr-block" style="--pr-color:var(--green);"><div class="pr-num">#7</div><div class="pr-label">Payment</div></div>
+    <div class="pr-block" style="--pr-color:var(--purple);"><div class="pr-num">#8</div><div class="pr-label">Sale</div></div>
+    <div class="pr-block" style="--pr-color:var(--pink);"><div class="pr-num">#9</div><div class="pr-label">Events</div></div>
+    <div class="pr-block" style="--pr-color:var(--gold);"><div class="pr-num">#10</div><div class="pr-label">Logger</div></div>
+    <div class="pr-block" style="--pr-color:var(--cyan);"><div class="pr-num">#11</div><div class="pr-label">Portainer</div></div>
+    <div class="pr-block" style="--pr-color:var(--green);"><div class="pr-num">#12</div><div class="pr-label">Tests</div></div>
+    <div class="pr-block" style="--pr-color:var(--muted);"><div class="pr-num">#13</div><div class="pr-label">Lint</div></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-logo">Cinema <em>API</em></div>
+  <div class="footer-sub">NestJS · TypeScript · PostgreSQL · Redis · RabbitMQ · Docker · Prisma · Jest</div>
+  <div class="footer-stack">88 testes · 13 PRs · 6 containers · 8 endpoints · 4 models · 3 filas · 0 falhas</div>
+</footer>
+
+</body>
+</html>

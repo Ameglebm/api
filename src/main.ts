@@ -74,7 +74,7 @@ async function bootstrap() {
   \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Redis          \x1b[2mredis:6379\x1b[0m
   \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  RabbitMQ       \x1b[2mrabbitmq:5672\x1b[0m
   \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Prisma Studio  \x1b[2mlocalhost:5555\x1b[0m
-  \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Portainer      \x1b[2mPortainer:9000\x1b[0m
+  \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Portainer      \x1b[2mportainer:9000\x1b[0m
   \x1b[2m└──────────────────────────────────────────────────────────────┘\x1b[0m
 `;
   console.log(banner);
