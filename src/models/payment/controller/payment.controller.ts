@@ -24,7 +24,7 @@ export class PaymentController {
   @ApiResponse({ status: 409, description: 'Já confirmada ou assento vendido' })
   @ApiResponse({ status: 410, description: 'Reserva expirada' })
   async confirm(
-    @Param('reservationId', ParseUUIDPipe) reservationId: string,
+    @Param('reservationId', new ParseUUIDPipe({ errorHttpStatusCode: 422 })) reservationId: string,
   ): Promise<ResponsePaymentDto> {
     return this.paymentService.confirm(reservationId);
   }
