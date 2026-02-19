@@ -89,7 +89,9 @@ describe('ReservationConsumer', () => {
     it('deve expirar reserva quando ainda está PENDING', async () => {
       await handler(mockPayload);
 
-      expect(mockReservationRepo.expire).toHaveBeenCalledWith('reservation-001');
+      expect(mockReservationRepo.expire).toHaveBeenCalledWith(
+        'reservation-001',
+      );
     });
 
     it('deve liberar assento para AVAILABLE', async () => {

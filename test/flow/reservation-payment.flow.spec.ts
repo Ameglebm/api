@@ -50,8 +50,17 @@ const mockSeatRepo = {
 };
 
 const mockTx = {
-  reservation: { update: jest.fn().mockResolvedValue({ ...mockReservation, status: ReservationStatus.CONFIRMED }) },
-  seat: { update: jest.fn().mockResolvedValue({ ...mockSeat, status: SeatStatus.SOLD }) },
+  reservation: {
+    update: jest.fn().mockResolvedValue({
+      ...mockReservation,
+      status: ReservationStatus.CONFIRMED,
+    }),
+  },
+  seat: {
+    update: jest
+      .fn()
+      .mockResolvedValue({ ...mockSeat, status: SeatStatus.SOLD }),
+  },
   sale: { create: jest.fn().mockResolvedValue(mockSale) },
 };
 
@@ -86,16 +95,16 @@ describe('Fluxo: Reserva → Pagamento', () => {
         ReservationService,
         PaymentService,
         { provide: RESERVATION_REPOSITORY, useValue: mockReservationRepo },
-        { provide: SEAT_REPOSITORY,        useValue: mockSeatRepo },
-        { provide: PrismaService,          useValue: mockPrisma },
-        { provide: RedisService,           useValue: mockRedis },
-        { provide: RabbitMQService,        useValue: mockRabbitMQ },
-        { provide: LoggerService,          useValue: mockLogger },
+        { provide: SEAT_REPOSITORY, useValue: mockSeatRepo },
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: RedisService, useValue: mockRedis },
+        { provide: RabbitMQService, useValue: mockRabbitMQ },
+        { provide: LoggerService, useValue: mockLogger },
       ],
     }).compile();
 
     reservationService = module.get<ReservationService>(ReservationService);
-    paymentService     = module.get<PaymentService>(PaymentService);
+    paymentService = module.get<PaymentService>(PaymentService);
 
     jest.clearAllMocks();
   });
@@ -121,7 +130,10 @@ describe('Fluxo: Reserva → Pagamento', () => {
     });
 
     it('deve adquirir lock Redis na reserva e liberar no pagamento', async () => {
-      await reservationService.create({ seatId: 'seat-001', userId: 'usuario-001' });
+      await reservationService.create({
+        seatId: 'seat-001',
+        userId: 'usuario-001',
+      });
       expect(mockRedis.acquireLock).toHaveBeenCalledWith('seat-001', 30000);
 
       await paymentService.confirm('reservation-001');
@@ -129,7 +141,10 @@ describe('Fluxo: Reserva → Pagamento', () => {
     });
 
     it('deve publicar reservation.created e payment.confirmed em sequência', async () => {
-      await reservationService.create({ seatId: 'seat-001', userId: 'usuario-001' });
+      await reservationService.create({
+        seatId: 'seat-001',
+        userId: 'usuario-001',
+      });
       await paymentService.confirm('reservation-001');
 
       const calls = (mockRabbitMQ.publish as jest.Mock).mock.calls;
@@ -144,24 +159,36 @@ describe('Fluxo: Reserva → Pagamento', () => {
   describe('race condition: dois usuários no mesmo assento', () => {
     it('deve bloquear segundo usuário quando assento já está com lock', async () => {
       // Primeiro usuário — sucesso
-      await reservationService.create({ seatId: 'seat-001', userId: 'usuario-001' });
+      await reservationService.create({
+        seatId: 'seat-001',
+        userId: 'usuario-001',
+      });
 
       // Segundo usuário — lock já existe
       (mockRedis.acquireLock as jest.Mock).mockResolvedValueOnce(false);
 
       await expect(
-        reservationService.create({ seatId: 'seat-001', userId: 'usuario-002' }),
+        reservationService.create({
+          seatId: 'seat-001',
+          userId: 'usuario-002',
+        }),
       ).rejects.toThrow(ConflictException);
     });
 
     it('deve garantir que apenas uma reserva é criada em concorrência', async () => {
       (mockRedis.acquireLock as jest.Mock)
-        .mockResolvedValueOnce(true)   // primeiro usuário — sucesso
+        .mockResolvedValueOnce(true) // primeiro usuário — sucesso
         .mockResolvedValueOnce(false); // segundo usuário — bloqueado
 
       const [result1, result2] = await Promise.allSettled([
-        reservationService.create({ seatId: 'seat-001', userId: 'usuario-001' }),
-        reservationService.create({ seatId: 'seat-001', userId: 'usuario-002' }),
+        reservationService.create({
+          seatId: 'seat-001',
+          userId: 'usuario-001',
+        }),
+        reservationService.create({
+          seatId: 'seat-001',
+          userId: 'usuario-002',
+        }),
       ]);
 
       expect(result1.status).toBe('fulfilled');
@@ -176,14 +203,22 @@ describe('Fluxo: Reserva → Pagamento', () => {
       (mockSeatRepo.findById as jest.Mock).mockResolvedValueOnce(null);
 
       await expect(
-        reservationService.create({ seatId: 'seat-invalido', userId: 'usuario-001' }),
+        reservationService.create({
+          seatId: 'seat-invalido',
+          userId: 'usuario-001',
+        }),
       ).rejects.toThrow(NotFoundException);
     });
 
     it('não deve adquirir lock se assento não existe', async () => {
       (mockSeatRepo.findById as jest.Mock).mockResolvedValueOnce(null);
 
-      try { await reservationService.create({ seatId: 'seat-invalido', userId: 'usuario-001' }); } catch {}
+      try {
+        await reservationService.create({
+          seatId: 'seat-invalido',
+          userId: 'usuario-001',
+        });
+      } catch {}
 
       expect(mockRedis.acquireLock).not.toHaveBeenCalled();
     });

@@ -22,30 +22,32 @@ export class ReservationConsumer implements OnModuleInit {
     this.logger.setContext('ReservationConsumer');
   }
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     await this.rabbitmq.consume<ReservationCreatedEvent>(
       'reservations',
       async (payload) => {
         this.logger.log('Evento recebido: reservation.created', {
           reservationId: payload.reservationId,
         });
-        // Calcula quanto tempo falta pra expirar
+
         const now = Date.now();
         const expiresAt = new Date(payload.expiresAt).getTime();
         const delay = Math.max(expiresAt - now, 0);
-        // Espera o tempo restante
+
         await this.sleep(delay);
-        // Checa se ainda tá PENDING
+
         const reservation = await this.reservationRepo.findById(
           payload.reservationId,
         );
+
         if (!reservation) {
           this.logger.warn('Reserva não encontrada ao tentar expirar', {
             reservationId: payload.reservationId,
           });
           return;
         }
-        if (reservation.status !== ReservationStatus.PENDING) {
+
+        if ((reservation.status as string) !== ReservationStatus.PENDING) {
           this.logger.log('Reserva já processada, ignorando', {
             reservationId: payload.reservationId,
             status: reservation.status,
@@ -53,18 +55,16 @@ export class ReservationConsumer implements OnModuleInit {
           return;
         }
 
-        // Expira reserva
         await this.reservationRepo.expire(payload.reservationId);
-        // Libera assento
         await this.seatRepo.updateStatus(payload.seatId, SeatStatus.AVAILABLE);
 
-        // Publica evento de expiração
-        this.rabbitmq.publish('expirations', {
+        void this.rabbitmq.publish('expirations', {
           event: 'reservation.expired',
           reservationId: payload.reservationId,
           seatId: payload.seatId,
           userId: payload.userId,
         });
+
         this.logger.log('Reserva expirada automaticamente', {
           reservationId: payload.reservationId,
           seatId: payload.seatId,

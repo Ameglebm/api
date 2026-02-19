@@ -117,10 +117,10 @@ describe('SaleService', () => {
     it('deve logar histórico consultado com total', async () => {
       await service.findByUserId('usuario-001');
 
-      expect(mockLogger.log).toHaveBeenCalledWith(
-        'Histórico consultado',
-        { userId: 'usuario-001', total: 1 },
-      );
+      expect(mockLogger.log).toHaveBeenCalledWith('Histórico consultado', {
+        userId: 'usuario-001',
+        total: 1,
+      });
     });
 
     it('deve chamar repository com userId correto', async () => {

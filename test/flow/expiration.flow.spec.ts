@@ -60,10 +60,10 @@ describe('Fluxo: Expiração Automática de Reservas', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ReservationConsumer,
-        { provide: RabbitMQService,        useValue: mockRabbitMQ },
-        { provide: LoggerService,          useValue: mockLogger },
+        { provide: RabbitMQService, useValue: mockRabbitMQ },
+        { provide: LoggerService, useValue: mockLogger },
         { provide: RESERVATION_REPOSITORY, useValue: mockReservationRepo },
-        { provide: SEAT_REPOSITORY,        useValue: mockSeatRepo },
+        { provide: SEAT_REPOSITORY, useValue: mockSeatRepo },
       ],
     }).compile();
 
@@ -76,23 +76,34 @@ describe('Fluxo: Expiração Automática de Reservas', () => {
   // ─── Happy path: expiração automática ────────────────────────
   describe('expiração automática após TTL', () => {
     it('deve expirar reserva PENDING após o tempo', async () => {
-      (mockReservationRepo.findById as jest.Mock).mockResolvedValueOnce(mockReservation);
+      (mockReservationRepo.findById as jest.Mock).mockResolvedValueOnce(
+        mockReservation,
+      );
 
       await capturedHandler(mockPayload);
 
-      expect(mockReservationRepo.expire).toHaveBeenCalledWith('reservation-001');
+      expect(mockReservationRepo.expire).toHaveBeenCalledWith(
+        'reservation-001',
+      );
     });
 
     it('deve liberar assento para AVAILABLE após expiração', async () => {
-      (mockReservationRepo.findById as jest.Mock).mockResolvedValueOnce(mockReservation);
+      (mockReservationRepo.findById as jest.Mock).mockResolvedValueOnce(
+        mockReservation,
+      );
 
       await capturedHandler(mockPayload);
 
-      expect(mockSeatRepo.updateStatus).toHaveBeenCalledWith('seat-001', SeatStatus.AVAILABLE);
+      expect(mockSeatRepo.updateStatus).toHaveBeenCalledWith(
+        'seat-001',
+        SeatStatus.AVAILABLE,
+      );
     });
 
     it('deve publicar evento reservation.expired após expiração', async () => {
-      (mockReservationRepo.findById as jest.Mock).mockResolvedValueOnce(mockReservation);
+      (mockReservationRepo.findById as jest.Mock).mockResolvedValueOnce(
+        mockReservation,
+      );
 
       await capturedHandler(mockPayload);
 

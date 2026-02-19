@@ -33,9 +33,7 @@ describe('SessionController (contract)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SessionController],
-      providers: [
-        { provide: SESSION_SERVICE, useValue: mockSessionService },
-      ],
+      providers: [{ provide: SESSION_SERVICE, useValue: mockSessionService }],
     }).compile();
 
     app = module.createNestApplication();
@@ -93,15 +91,13 @@ describe('SessionController (contract)', () => {
     });
 
     it('deve chamar service.create com o dto', async () => {
-      await request(app.getHttpServer())
-        .post('/sessions')
-        .send({
-          movie: 'Interestelar',
-          room: 'Sala 7',
-          startsAt: '2026-03-01T19:00:00.000Z',
-          ticketPrice: 25,
-          totalSeats: 16,
-        });
+      await request(app.getHttpServer()).post('/sessions').send({
+        movie: 'Interestelar',
+        room: 'Sala 7',
+        startsAt: '2026-03-01T19:00:00.000Z',
+        ticketPrice: 25,
+        totalSeats: 16,
+      });
 
       expect(mockSessionService.create).toHaveBeenCalledTimes(1);
     });

@@ -127,7 +127,9 @@ describe('ReservationController (contract)', () => {
     });
 
     it('deve retornar 200 com array vazio quando não tem reservas', async () => {
-      (mockReservationService.findByUserId as jest.Mock).mockResolvedValueOnce([]);
+      (mockReservationService.findByUserId as jest.Mock).mockResolvedValueOnce(
+        [],
+      );
 
       const res = await request(app.getHttpServer())
         .get('/reservations/user/usuario-sem-reserva')

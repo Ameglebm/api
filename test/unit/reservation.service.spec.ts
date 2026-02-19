@@ -61,7 +61,10 @@ describe('ReservationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ReservationService,
-        { provide: RESERVATION_REPOSITORY, useValue: mockReservationRepository },
+        {
+          provide: RESERVATION_REPOSITORY,
+          useValue: mockReservationRepository,
+        },
         { provide: SEAT_REPOSITORY, useValue: mockSeatRepository },
         { provide: RedisService, useValue: mockRedisService },
         { provide: RabbitMQService, useValue: mockRabbitMQService },
@@ -69,7 +72,9 @@ describe('ReservationService', () => {
     }).compile();
 
     service = module.get<ReservationService>(ReservationService);
-    reservationRepo = module.get<IReservationRepository>(RESERVATION_REPOSITORY);
+    reservationRepo = module.get<IReservationRepository>(
+      RESERVATION_REPOSITORY,
+    );
     seatRepo = module.get(SEAT_REPOSITORY);
     redis = module.get(RedisService);
     rabbitmq = module.get(RabbitMQService);
@@ -194,4 +199,3 @@ describe('ReservationService', () => {
   });
 });
 // Esse é o mais importante — testa o fluxo de concorrência
-
