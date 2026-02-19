@@ -101,12 +101,12 @@ export class LoggerService implements NestLoggerService {
       `${c.bold}${c.bCyan}${message}${c.reset}`,
     ].join(' ');
 
-    // Metadata — negrito + branco puro, bem legível
+    // Metadata — negrito + branco puro em cada linha (ANSI não persiste entre linhas no Docker)
     const metaLine = metadata && Object.keys(metadata).length > 0
-      ? `\n${c.bold}\x1b[97m${JSON.stringify(metadata, null, 2)
+      ? `\n${JSON.stringify(metadata, null, 2)
           .split('\n')
-          .map(l => `         ${l}`)
-          .join('\n')}${c.reset}`
+          .map(l => `${c.bold}\x1b[97m         ${l}${c.reset}`)
+          .join('\n')}`
       : '';
 
     const output = `${line}${metaLine}`;
