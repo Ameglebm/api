@@ -15,7 +15,11 @@ export class SaleController {
   @Get('history/:userId')
   @ApiOperation({ summary: 'Histórico de compras confirmadas do usuário' })
   @ApiParam({ name: 'userId', description: 'ID do usuário' })
-  @ApiResponse({ status: 200, description: 'Lista de vendas', type: [ResponseSaleDto] })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de vendas',
+    type: [ResponseSaleDto],
+  })
   async findByUserId(
     @Param('userId') userId: string,
   ): Promise<ResponseSaleDto[]> {

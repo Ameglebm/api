@@ -197,3 +197,54 @@ DEPOIS do pagamento confirmado:
   Reservation → status: CONFIRMED  (pagamento feito)
   Seat        → status: SOLD       (vendido, ninguém mais pode comprar)
   Sale        → criada agora       (registro permanente: quem comprou, quando, qual assento)
+
+Ajustar events para ter a separação entre consumers e publishers
+Ate agora o sistema só publica eventos
+Reserva criada  → publica na fila "reservations"  → ninguém escuta
+Pagamento feito → publica na fila "payments"       → ninguém escuta
+Sem os consumrs as mensagens ficam acumulando no rabbit sem fazer nada os consumrs são os caras q ficam escutando as filas e fazem algo quando chega uma mensagem, tipo um balconista de um bar q entrega o pedido, procura, ou pega o pedido.
+Garçom (Service)     → anota o pedido e coloca no balcão
+Balcão (Fila RabbitMQ) → pedidos ficam ali esperando
+Balconista (Consumer)  → pega o pedido do balcão e prepara
+Sem o balconista, os pedidos acumulam no balcão e ninguém faz nada. O consumer é o cara que fica olhando pro balcão e fala: "chegou pedido novo? deixa eu resolver
+ReservationService publica "reserva criada" → fila reservations
+                                                    ↓
+ReservationConsumer pega a mensagem → espera 30s → expirou? → expira tudo
+
+Publishers (quem coloca o pedido no balcão)
+Consumers (quem pega o pedido do balcão)
+Consumer→Escuta a fila → EventoO → reservation.consumer.ts, reservations, reservation.created → Espera 30s. Se a reserva ainda tá PENDING → expira (Reservation→EXPIRED, Seat→AVAILABLE) e publica reservation.expired na fila expirations||| payment.consumer.ts, payments, payment.confirmed → Loga a venda. No futuro pode: enviar email, gerar nota fiscal, atualizar dashboard
+
+RESERVA:
+  Usuário reserva assento
+    → ReservationService cria reserva
+    → Publisher publica "reservation.created" na fila reservations
+    → Consumer pega a mensagem
+    → Espera 30s
+    → Checa: ainda PENDING?
+       SIM → expira reserva + libera assento + publica na fila expirations
+       NÃO → ignora (já pagou)
+
+PAGAMENTO:
+  Usuário confirma pagamento
+    → PaymentService cria Sale
+    → Publisher publica "payment.confirmed" na fila payments
+    → Consumer pega a mensagem
+    → Loga/processa (email, nota fiscal, etc)
+
+SEM separação (hoje):
+  ReservationService → cria reserva + publica evento + validação + lock Redis
+  (muita responsabilidade numa classe só)
+
+COM separação:
+  ReservationService   → cria reserva
+  ReservationPublisher → publica evento
+  ReservationConsumer  → escuta e processa expiração
+  (cada um faz uma coisa)
+
+  async onModuleInit futuro pode enviar email, gerar nota fiscal, atualizar dashboard já deixei ele pronto para escalar mais
+
+Hoje as interfaces estão espalhadas dentro dos publishers
+reservation.publisher.ts → tem ReservationCreatedEvent dentro dele
+payment.publisher.ts     → tem PaymentConfirmedEvent dentro dele
+tirar de dentro deles e colocar tudo num arquivo só events.types.ts → tem TODAS as interfaces aqui, depois ajusta isso se der tempo
