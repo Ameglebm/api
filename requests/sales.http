@@ -1,0 +1,75 @@
+@baseUrl = http://localhost:3000
+
+### 🎬 SALES — Histórico de Vendas
+
+### [1] Setup: Criar sessão → 201
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Interestelar",
+  "room": "Sala 7",
+  "startsAt": "2026-03-01T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [2] Listar assentos → 200
+# @name listSeats
+@sessionId = {{createSession.response.body.id}}
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [3] Criar reserva → 201 PENDING
+# @name createReservation
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{listSeats.response.body.0.id}}",
+  "userId": "usuario-001"
+}
+
+###
+
+### [4] ✅ Confirmar pagamento (dentro de 30s) → 201 Sale criada
+# @name confirmPayment
+@reservationId = {{createReservation.response.body.id}}
+POST {{baseUrl}}/payments/confirm/{{reservationId}}
+
+###
+
+### [5] ✅ Histórico do usuário com compra → 200 array com movie, room, seatNumber
+GET {{baseUrl}}/sales/history/usuario-001
+
+###
+
+### [6] ✅ Usuário sem compras → 200 array vazio []
+GET {{baseUrl}}/sales/history/usuario-sem-compra
+
+###
+
+### [7] Segunda reserva — outro assento → 201 PENDING
+# @name createReservation2
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{listSeats.response.body.1.id}}",
+  "userId": "usuario-001"
+}
+
+###
+
+### [8] ✅ Confirmar segunda compra (dentro de 30s) → 201 Sale criada
+@reservationId2 = {{createReservation2.response.body.id}}
+POST {{baseUrl}}/payments/confirm/{{reservationId2}}
+
+###
+
+### [9] ✅ Histórico agora tem 2 vendas → 200 mais recente primeiro
+GET {{baseUrl}}/sales/history/usuario-001

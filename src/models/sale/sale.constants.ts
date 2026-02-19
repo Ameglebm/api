@@ -1,0 +1,2 @@
+export const SALE_REPOSITORY = 'SALE_REPOSITORY';
+export const SALE_SERVICE = 'SALE_SERVICE';
