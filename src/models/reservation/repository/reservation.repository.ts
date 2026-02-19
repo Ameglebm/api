@@ -7,7 +7,7 @@ import { ReservationStatus } from '../../../common/enums/reservation-status.enum
 @Injectable()
 export class ReservationRepository implements IReservationRepository {
   constructor(private readonly prisma: PrismaService) {}
-  // 🔹 Criar reserva
+  // Criar reserva
   async create(dto: CreateReservationDto, expiresAt: Date) {
     return this.prisma.reservation.create({
       data: {
@@ -19,14 +19,14 @@ export class ReservationRepository implements IReservationRepository {
     });
   }
 
-  // 🔹 Buscar reserva por ID
+  // Buscar reserva por ID
   async findById(id: string) {
     return this.prisma.reservation.findUnique({
       where: { id },
     });
   }
 
-  // 🔹 Buscar reservas por usuário
+  // Buscar reservas por usuário
   async findByUserId(userId: string) {
     return this.prisma.reservation.findMany({
       where: { userId },
@@ -34,7 +34,7 @@ export class ReservationRepository implements IReservationRepository {
     });
   }
 
-  // 🔹 Expirar reserva
+  // Expirar reserva
   async expire(id: string) {
     return this.prisma.reservation.update({
       where: { id },

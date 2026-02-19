@@ -1,0 +1,79 @@
+@baseUrl = http://localhost:3000
+
+### 🎬 PAYMENTS — Confirmação de Pagamento
+
+### [1] Setup: Criar sessão com 20 assentos
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Interestelar",
+  "room": "Sala 7",
+  "startsAt": "2026-03-01T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [2] Listar assentos da sessão
+# @name listSeats
+@sessionId = {{createSession.response.body.id}}
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [3] Criar reserva ← rode [1] e [2] antes
+# @name createReservation
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{listSeats.response.body.0.id}}",
+  "userId": "usuario-001"
+}
+
+###
+
+### [4] ✅ Confirmar pagamento (dentro dos 30s) ← rode [3] e execute RÁPIDO
+# @name confirmPayment
+@reservationId = {{createReservation.response.body.id}}
+POST {{baseUrl}}/payments/confirm/{{reservationId}}
+
+###
+
+### [5] Verificar assento virou SOLD
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [6] ❌ Confirmar mesma reserva de novo → 409
+POST {{baseUrl}}/payments/confirm/{{reservationId}}
+
+###
+
+### [7] ❌ ReservationId inexistente → 404
+POST {{baseUrl}}/payments/confirm/00000000-0000-0000-0000-000000000000
+
+###
+
+### [8] Setup: Nova reserva para teste de expiração
+# @name expireReservation
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{listSeats.response.body.1.id}}",
+  "userId": "usuario-002"
+}
+
+###
+
+### [9] ⏳ ESPERE 31 SEGUNDOS antes de rodar o [10]
+
+###
+
+### [10] ❌ Confirmar reserva expirada → 410 Gone
+@expiredReservationId = {{expireReservation.response.body.id}}
+POST {{baseUrl}}/payments/confirm/{{expiredReservationId}}

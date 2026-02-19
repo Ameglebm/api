@@ -11,7 +11,7 @@ export class SeatController {
     @Inject(SEAT_SERVICE)
     private readonly seatService: ISeatService,
   ) {}
-  // 🔹 Buscar assentos por sessão
+  // Buscar assentos por sessão
   @ApiOperation({
     summary: 'Lista assentos de uma sessão com disponibilidade em tempo real',
   })
