@@ -56,10 +56,7 @@ export class ReservationConsumer implements OnModuleInit {
         // Expira reserva
         await this.reservationRepo.expire(payload.reservationId);
         // Libera assento
-        await this.seatRepo.updateStatus(
-          payload.seatId,
-          SeatStatus.AVAILABLE,
-        );
+        await this.seatRepo.updateStatus(payload.seatId, SeatStatus.AVAILABLE);
 
         // Publica evento de expiração
         this.rabbitmq.publish('expirations', {

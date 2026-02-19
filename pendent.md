@@ -248,3 +248,5 @@ Hoje as interfaces estão espalhadas dentro dos publishers
 reservation.publisher.ts → tem ReservationCreatedEvent dentro dele
 payment.publisher.ts     → tem PaymentConfirmedEvent dentro dele
 tirar de dentro deles e colocar tudo num arquivo só events.types.ts → tem TODAS as interfaces aqui, depois ajusta isso se der tempo
+
+O LoggerModule é @Global() e o LoggerService é @Injectable() sem escopo — isso significa singleton uma única instância pra aplicação inteira entao da isso em tudo, pqp kkkkkk q mole ...kkkkk
