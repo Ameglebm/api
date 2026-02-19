@@ -9,6 +9,7 @@ import { SessionModule } from './models/session/session.module';
 import { SeatModule } from './models/seat/seat.module';
 import { ReservationModule } from './models/reservation/reservation.module';
 import { PaymentModule } from './models/payment/payment.module';
+import { SaleModule } from './models/sale/sale.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PaymentModule } from './models/payment/payment.module';
     SeatModule,
     ReservationModule,
     PaymentModule,
+    SaleModule,
   ], // ← aqui vai entrar PrismaModule, RedisModule, etc.
   controllers: [AppController],
   providers: [AppService],
