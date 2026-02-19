@@ -97,7 +97,9 @@ describe('PaymentService', () => {
     }).compile();
 
     service = module.get<PaymentService>(PaymentService);
-    reservationRepo = module.get<IReservationRepository>(RESERVATION_REPOSITORY);
+    reservationRepo = module.get<IReservationRepository>(
+      RESERVATION_REPOSITORY,
+    );
     seatRepo = module.get<ISeatRepository>(SEAT_REPOSITORY);
 
     jest.clearAllMocks();
@@ -116,7 +118,9 @@ describe('PaymentService', () => {
     it('não deve iniciar transaction se reserva não existe', async () => {
       (reservationRepo.findById as jest.Mock).mockResolvedValueOnce(null);
 
-      try { await service.confirm('id-inexistente'); } catch {}
+      try {
+        await service.confirm('id-inexistente');
+      } catch {}
 
       expect(mockPrisma.$transaction).not.toHaveBeenCalled();
     });
@@ -155,7 +159,9 @@ describe('PaymentService', () => {
         expiresAt: new Date(Date.now() - 1000),
       });
 
-      try { await service.confirm('reservation-001'); } catch {}
+      try {
+        await service.confirm('reservation-001');
+      } catch {}
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
         'Tentativa de confirmar reserva expirada',

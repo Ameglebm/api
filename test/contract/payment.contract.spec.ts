@@ -31,9 +31,7 @@ describe('PaymentController (contract)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PaymentController],
-      providers: [
-        { provide: PAYMENT_SERVICE, useValue: mockPaymentService },
-      ],
+      providers: [{ provide: PAYMENT_SERVICE, useValue: mockPaymentService }],
     }).compile();
 
     app = module.createNestApplication();
@@ -63,8 +61,9 @@ describe('PaymentController (contract)', () => {
     });
 
     it('deve chamar service.confirm com o reservationId', async () => {
-      await request(app.getHttpServer())
-        .post(`/payments/confirm/${VALID_UUID}`);
+      await request(app.getHttpServer()).post(
+        `/payments/confirm/${VALID_UUID}`,
+      );
 
       expect(mockPaymentService.confirm).toHaveBeenCalledWith(VALID_UUID);
     });
