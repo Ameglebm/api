@@ -1,0 +1,55 @@
+@baseUrl = http://localhost:3000
+
+### 🎬 EVENTS — Teste de Expiração Automática
+
+### [1] Setup: Criar sessão → 201
+# @name createSession
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "movie": "Interestelar",
+  "room": "Sala 7",
+  "startsAt": "2026-03-01T19:00:00.000Z",
+  "ticketPrice": 25.00,
+  "totalSeats": 20
+}
+
+###
+
+### [2] Listar assentos → 200 todos AVAILABLE
+# @name listSeats
+@sessionId = {{createSession.response.body.id}}
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [3] Criar reserva → 201 PENDING
+# @name createReservation
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{listSeats.response.body.0.id}}",
+  "userId": "usuario-001"
+}
+
+###
+
+### [4] Verificar assento lockado → 200 status: AVAILABLE, isLocked: true
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [5] ⏳ ESPERE 31 SEGUNDOS
+
+###
+
+### [6] ✅ Assento voltou AVAILABLE automaticamente → 200 status: AVAILABLE, isLocked: false
+GET {{baseUrl}}/seats/{{sessionId}}
+
+###
+
+### [7] ✅ Reserva ficou EXPIRED → 200 status: EXPIRED
+@reservationId = {{createReservation.response.body.id}}
+GET {{baseUrl}}/reservations/{{reservationId}}
