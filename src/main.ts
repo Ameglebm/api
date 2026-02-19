@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -49,6 +48,7 @@ async function bootstrap() {
   const swaggerUrl = `http://localhost:${port}/api/docs`;
   const rabbitUrl = `http://localhost:15672`;
   const prismaUrl = `http://localhost:5555`;
+  const portainerUrl = `http://localhost:9000`;
 
   const banner = `
 \x1b[34m
@@ -66,6 +66,7 @@ async function bootstrap() {
   \x1b[2m│\x1b[0m  \x1b[35m◈\x1b[0m  Swagger        ${link(swaggerUrl)}
   \x1b[2m│\x1b[0m  \x1b[35m◈\x1b[0m  RabbitMQ UI    ${link(rabbitUrl)}
   \x1b[2m│\x1b[0m  \x1b[35m◈\x1b[0m  PrismaStudio   ${link(prismaUrl)}
+  \x1b[2m│\x1b[0m  \x1b[35m◈\x1b[0m  Portainer      ${link(portainerUrl)}
   \x1b[2m└──────────────────────────────────────────────────────────────┘\x1b[0m
 
   \x1b[2m┌─ Infraestrutura ─────────────────────────────────────────────┐\x1b[0m
@@ -73,6 +74,7 @@ async function bootstrap() {
   \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Redis          \x1b[2mredis:6379\x1b[0m
   \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  RabbitMQ       \x1b[2mrabbitmq:5672\x1b[0m
   \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Prisma Studio  \x1b[2mlocalhost:5555\x1b[0m
+  \x1b[2m│\x1b[0m  \x1b[2m●\x1b[0m  Portainer      \x1b[2mPortainer:9000\x1b[0m
   \x1b[2m└──────────────────────────────────────────────────────────────┘\x1b[0m
 `;
   console.log(banner);

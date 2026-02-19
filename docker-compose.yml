@@ -82,5 +82,22 @@ services:
     logging:
       driver: "none"
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: cinema-portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - cinema_network
+    restart: unless-stopped
+    logging:
+      driver: "none"
+
+volumes:
+  portainer_data:
+
 networks:
   cinema_network:
