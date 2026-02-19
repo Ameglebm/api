@@ -32,7 +32,7 @@ import { EventsModule } from './events/events.module';
   providers: [
     AppService,
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
-    { provide: APP_FILTER,      useClass: HttpExceptionFilter },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
   ],
 })
 export class AppModule {}

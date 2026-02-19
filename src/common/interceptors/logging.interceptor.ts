@@ -14,21 +14,19 @@ export class LoggingInterceptor implements NestInterceptor {
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const req    = context.switchToHttp().getRequest();
+    const req = context.switchToHttp().getRequest();
     const method = req.method;
-    const url    = req.url;
-    const start  = Date.now();
+    const url = req.url;
+    const start = Date.now();
     return next.handle().pipe(
       tap((body) => {
-        const ms         = Date.now() - start;
+        const ms = Date.now() - start;
         const statusCode = context.switchToHttp().getResponse().statusCode;
-        // Não loga body de listagens grandes — só o status e tempo
         const meta: Record<string, any> = { statusCode, ms: `${ms}ms` };
-        // Inclui body apenas se for pequeno (criações, buscas por ID)
-        if (body && !Array.isArray(body)) {
-          meta.body = body;
-        } else if (Array.isArray(body)) {
+        if (Array.isArray(body)) {
           meta.total = body.length;
+        } else if (body?.id) {
+          meta.id = body.id;
         }
         this.logger.log(`${method} ${url}`, meta);
       }),
