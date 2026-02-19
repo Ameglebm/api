@@ -243,3 +243,8 @@ COM separação:
   (cada um faz uma coisa)
 
   async onModuleInit futuro pode enviar email, gerar nota fiscal, atualizar dashboard já deixei ele pronto para escalar mais
+
+Hoje as interfaces estão espalhadas dentro dos publishers
+reservation.publisher.ts → tem ReservationCreatedEvent dentro dele
+payment.publisher.ts     → tem PaymentConfirmedEvent dentro dele
+tirar de dentro deles e colocar tudo num arquivo só events.types.ts → tem TODAS as interfaces aqui, depois ajusta isso se der tempo
