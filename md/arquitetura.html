@@ -18,7 +18,7 @@
     --accent5: #ffd166;
     --accent6: #06b6d4;
     --text: #cdd9e5;
-    --muted: #4a5a6a;
+    --muted: #6b829a;
     --font-mono: 'JetBrains Mono', monospace;
     --font-display: 'Syne', sans-serif;
   }
@@ -33,6 +33,10 @@
 
   header { margin-bottom: 2.5rem; animation: fadeDown 0.6s ease both; }
   header .tag { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(0,212,255,0.3); display: inline-block; padding: 0.2rem 0.7rem; border-radius: 2px; margin-bottom: 0.8rem; }
+  .tech-stack { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.1rem; }
+  .tech-pill { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.05em; padding: 0.25rem 0.7rem; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--tc) 40%, transparent); background: color-mix(in srgb, var(--tc) 8%, transparent); color: var(--tc); transition: background 0.2s, box-shadow 0.2s; cursor: default; }
+  .tech-pill:hover { background: color-mix(in srgb, var(--tc) 16%, transparent); box-shadow: 0 0 12px -3px var(--tc); }
+  .tech-ico { font-size: 0.85rem; }
   header h1 { font-family: var(--font-display); font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 800; color: #fff; line-height: 1.1; }
   header h1 span { color: var(--accent); }
   header p { margin-top: 0.6rem; font-size: 0.78rem; color: var(--muted); max-width: 580px; line-height: 1.6; }
@@ -45,17 +49,18 @@
   }
   .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* DOCKER */
+  /* ══ DOCKER ══ */
   .docker-wrapper { border: 2px dashed rgba(6,182,212,0.3); border-radius: 16px; padding: 1.5rem; position: relative; background: rgba(6,182,212,0.025); margin-bottom: 0.5rem; animation: fadeUp 0.5s ease 0.1s both; }
   .docker-label { position: absolute; top: -13px; left: 20px; background: var(--bg); padding: 0 0.8rem; font-size: 0.63rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent6); font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
-  .docker-cmd { margin-bottom: 1.2rem; background: #04070d; border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1.1rem; font-size: 0.72rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+  .docker-cmd { margin-bottom: 1.2rem; background: #04070d; border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1.1rem; font-size: 0.72rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; transition: border-color 0.2s, box-shadow 0.2s; cursor: default; }
+  .docker-cmd:hover { border-color: var(--accent3); box-shadow: 0 0 16px -4px var(--accent3); }
   .docker-cmd .prompt { color: var(--accent3); }
   .docker-cmd .cmd { color: #fff; }
   .docker-cmd .comment { color: var(--muted); margin-left: auto; font-size: 0.6rem; }
-  .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; }
-  .service-card { border: 1px solid var(--card-color, var(--border)); border-radius: 10px; padding: 1rem; background: var(--surface); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; animation: fadeUp 0.4s ease both; }
+  .services-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.9rem; }
+  .service-card { border: 1px solid var(--card-color, var(--border)); border-radius: 10px; padding: 1rem; background: var(--surface); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; animation: fadeUp 0.4s ease both; }
   .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-color, var(--border)); border-radius: 10px 10px 0 0; }
-  .service-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -8px var(--card-color, var(--accent)); }
+  .service-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -8px var(--card-color, var(--accent)); border-color: var(--card-color, var(--accent)); }
   .service-icon { font-size: 1.2rem; margin-bottom: 0.35rem; }
   .service-name { font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; color: #fff; }
   .service-container { font-size: 0.58rem; color: var(--muted); margin: 0.1rem 0 0.4rem; }
@@ -64,14 +69,30 @@
   .service-port { font-size: 0.58rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 0.12rem 0.4rem; border-radius: 3px; color: var(--muted); }
   .service-port span { color: var(--card-color, var(--accent)); }
   .service-image { font-size: 0.58rem; color: var(--muted); margin-bottom: 0.5rem; font-style: italic; }
-  .service-desc { font-size: 0.61rem; color: var(--muted); line-height: 1.5; border-top: 1px solid var(--border); padding-top: 0.5rem; }
+  .service-desc { font-size: 0.63rem; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 0.5rem; font-weight: 500; }
   .service-desc strong { color: var(--card-color, var(--text)); font-weight: 600; }
   .network-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.56rem; color: var(--accent6); border: 1px solid rgba(6,182,212,0.25); padding: 0.12rem 0.45rem; border-radius: 20px; margin-top: 0.45rem; }
   .network-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent6); }
 
-  /* ENDPOINTS */
+  /* ══ CONCURRENCY ══ */
+  .conc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; animation: fadeUp 0.5s ease both; }
+  .conc-card { border: 1px solid var(--conc-color, var(--border)); border-radius: 10px; overflow: hidden; background: var(--surface); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .conc-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -8px var(--conc-color, var(--accent)); border-color: var(--conc-color, var(--accent)); }
+  .conc-head { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--conc-color, var(--border)); padding: 0.7rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .conc-title { font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; color: #fff; }
+  .conc-badge { margin-left: auto; font-size: 0.54rem; color: var(--conc-color); border: 1px solid var(--conc-color); padding: 0.1rem 0.4rem; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .conc-body { padding: 0.8rem 1rem; }
+  .conc-step { display: flex; gap: 0.7rem; align-items: flex-start; margin-bottom: 0.6rem; font-size: 0.62rem; }
+  .conc-step:last-child { margin-bottom: 0; }
+  .conc-num { width: 18px; height: 18px; border-radius: 50%; background: var(--conc-color, var(--muted)); color: #000; font-size: 0.55rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .conc-text { color: var(--muted); line-height: 1.6; font-weight: 500; }
+  .conc-text strong { color: var(--conc-color, var(--text)); }
+  .code-tag { background: #04060a; border: 1px solid var(--border); border-radius: 3px; padding: 0.08rem 0.35rem; font-size: 0.6rem; color: var(--conc-color, var(--accent)); }
+
+  /* ══ ENDPOINTS ══ */
   .endpoints-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; animation: fadeUp 0.5s ease both; }
-  .endpoint-group { border: 1px solid var(--group-color, var(--border)); border-radius: 10px; overflow: hidden; background: var(--surface); }
+  .endpoint-group { border: 1px solid var(--group-color, var(--border)); border-radius: 10px; overflow: hidden; background: var(--surface); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .endpoint-group:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -8px var(--group-color, var(--accent)); border-color: var(--group-color, var(--accent)); }
   .endpoint-group-header { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--group-color, var(--border)); padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
   .endpoint-group-icon { font-size: 1rem; }
   .endpoint-group-name { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; color: #fff; }
@@ -85,13 +106,14 @@
   .endpoint-info { flex: 1; }
   .endpoint-path { font-size: 0.65rem; color: #fff; margin-bottom: 0.18rem; }
   .endpoint-path span { color: var(--group-color, var(--accent)); }
-  .endpoint-desc { font-size: 0.58rem; color: var(--muted); line-height: 1.4; }
+  .endpoint-desc { font-size: 0.6rem; color: var(--muted); line-height: 1.5; font-weight: 500; }
   .endpoint-tags { display: flex; gap: 0.3rem; margin-top: 0.25rem; flex-wrap: wrap; }
   .etag { font-size: 0.54rem; padding: 0.1rem 0.35rem; border-radius: 2px; border: 1px solid; }
 
-  /* MODELS */
+  /* ══ MODELS ══ */
   .models-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; animation: fadeUp 0.5s ease both; }
-  .model-card { border: 1px solid var(--model-color, var(--border)); border-radius: 10px; overflow: hidden; background: var(--surface); }
+  .model-card { border: 1px solid var(--model-color, var(--border)); border-radius: 10px; overflow: hidden; background: var(--surface); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .model-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -8px var(--model-color, var(--accent)); border-color: var(--model-color, var(--accent)); }
   .model-header { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--model-color, var(--border)); padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
   .model-name { font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; color: #fff; }
   .model-badge { margin-left: auto; font-size: 0.55rem; color: var(--model-color); border: 1px solid var(--model-color); padding: 0.1rem 0.4rem; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -100,13 +122,13 @@
   .model-field:last-child { border-bottom: none; }
   .field-name { color: var(--model-color, var(--accent)); width: 110px; flex-shrink: 0; }
   .field-type { color: var(--accent5); width: 80px; flex-shrink: 0; }
-  .field-note { color: var(--muted); font-size: 0.58rem; }
-  .field-pk   { font-size: 0.52rem; background: rgba(255,209,102,0.12); color: var(--accent5); border: 1px solid rgba(255,209,102,0.3); padding: 0.08rem 0.3rem; border-radius: 2px; margin-left: auto; }
-  .field-fk   { font-size: 0.52rem; background: rgba(199,125,255,0.1); color: var(--accent4); border: 1px solid rgba(199,125,255,0.3); padding: 0.08rem 0.3rem; border-radius: 2px; margin-left: auto; }
+  .field-note { color: var(--muted); font-size: 0.6rem; font-weight: 500; }
+  .field-pk { font-size: 0.52rem; background: rgba(255,209,102,0.12); color: var(--accent5); border: 1px solid rgba(255,209,102,0.3); padding: 0.08rem 0.3rem; border-radius: 2px; margin-left: auto; }
+  .field-fk { font-size: 0.52rem; background: rgba(199,125,255,0.1); color: var(--accent4); border: 1px solid rgba(199,125,255,0.3); padding: 0.08rem 0.3rem; border-radius: 2px; margin-left: auto; }
 
-  /* FLOW */
+  /* ══ FLOW ══ */
   .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
-  .node { position: relative; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.3rem; background: var(--surface); width: 100%; max-width: 420px; transition: border-color 0.2s, box-shadow 0.2s; animation: fadeUp 0.5s ease both; }
+  .node { position: relative; border: 1px solid var(--node-color, var(--border)); border-radius: 8px; padding: 1rem 1.3rem; background: var(--surface); width: 100%; max-width: 420px; transition: border-color 0.2s, box-shadow 0.2s; animation: fadeUp 0.5s ease both; }
   .node:hover { border-color: var(--node-color, var(--accent)); box-shadow: 0 0 20px -4px var(--node-color, var(--accent)); }
   .node-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
   .node-icon { font-size: 1.05rem; }
@@ -115,7 +137,7 @@
   .node-layers { display: flex; gap: 0.35rem; flex-wrap: wrap; }
   .layer { font-size: 0.63rem; color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 3px; padding: 0.13rem 0.45rem; }
   .layer.hi { color: var(--node-color, var(--accent)); border-color: var(--node-color, var(--accent)); background: rgba(0,212,255,0.05); }
-  .node-explain { margin-top: 0.55rem; font-size: 0.61rem; color: var(--muted); line-height: 1.55; border-top: 1px solid var(--border); padding-top: 0.45rem; }
+  .node-explain { margin-top: 0.55rem; font-size: 0.63rem; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 0.45rem; font-weight: 500; }
   .node-explain strong { color: var(--node-color, var(--text)); }
 
   .connector { display: flex; flex-direction: column; align-items: center; }
@@ -134,19 +156,58 @@
 
   .infra-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem; width: 100%; animation: fadeUp 0.5s ease both; }
   .infra-node { border: 1px solid var(--node-color, var(--border)); border-radius: 8px; padding: 0.9rem 1rem; background: var(--surface); transition: all 0.2s; }
-  .infra-node:hover { box-shadow: 0 0 20px -4px var(--node-color); transform: translateY(-2px); }
+  .infra-node:hover { box-shadow: 0 0 20px -4px var(--node-color, var(--accent)); transform: translateY(-2px); border-color: var(--node-color, var(--accent)); }
   .infra-icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
   .infra-name { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
-  .infra-detail { font-size: 0.6rem; color: var(--muted); line-height: 1.5; }
+  .infra-detail { font-size: 0.62rem; color: var(--muted); line-height: 1.6; font-weight: 500; }
   .infra-detail strong { color: var(--node-color, var(--text)); }
 
   .events-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; width: 100%; animation: fadeUp 0.5s ease both; }
-  .events-node { border: 1px solid var(--node-color, var(--border)); border-radius: 8px; padding: 1rem 1.1rem; background: var(--surface); }
+  .events-node { border: 1px solid var(--node-color, var(--border)); border-radius: 8px; padding: 1rem 1.1rem; background: var(--surface); transition: all 0.2s; }
+  .events-node:hover { box-shadow: 0 0 20px -4px var(--node-color, var(--accent)); transform: translateY(-2px); border-color: var(--node-color, var(--accent)); }
   .events-node .node-header { margin-bottom: 0.6rem; }
   .event-tag { display: inline-block; font-size: 0.57rem; padding: 0.18rem 0.48rem; border-radius: 3px; border: 1px solid; margin: 0.13rem; letter-spacing: 0.04em; }
 
+  /* ══ TESTS (novo estilo) ══ */
+  .total-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.2rem; animation: fadeUp 0.5s ease both;
+  }
+  .total-num { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--accent3); line-height: 1; }
+  .total-label { font-size: 0.6rem; color: var(--muted); margin-top: 0.3rem; }
+  .total-label strong { color: var(--text); }
+
+  .tests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; animation: fadeUp 0.5s ease both; }
+  .test-card { border: 1px solid var(--test-color, var(--border)); border-radius: 10px; overflow: hidden; background: var(--surface); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .test-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -8px var(--test-color, var(--accent)); border-color: var(--test-color, var(--accent)); }
+  .test-header { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--test-color, var(--border)); padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .test-name { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; color: #fff; }
+  .test-count { margin-left: auto; font-size: 0.58rem; color: var(--test-color, var(--accent3)); border: 1px solid var(--test-color, var(--border)); padding: 0.1rem 0.4rem; border-radius: 10px; }
+  .test-list { padding: 0.5rem 0; }
+  .test-item { padding: 0.3rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.62rem; color: var(--muted); font-weight: 500; }
+  .test-item:last-child { border-bottom: none; }
+  .test-check { color: var(--accent3); flex-shrink: 0; }
+  .test-suite { flex: 1; }
+  .test-detail { font-size: 0.58rem; color: var(--test-color, var(--accent3)); white-space: nowrap; }
+
+  /* ══ LOGGER ══ */
+  .logger-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; animation: fadeUp 0.5s ease both; }
+  .logger-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; transition: border-color 0.2s, box-shadow 0.2s; }
+  .logger-card:hover { border-color: var(--accent6); box-shadow: 0 0 20px -6px var(--accent6); }
+  .logger-card-title { font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .log-line { font-size: 0.6rem; line-height: 2; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: baseline; }
+  .log-time { color: var(--muted); }
+  .log-level-info { color: var(--accent3); font-weight: 700; }
+  .log-level-warn { color: var(--accent5); font-weight: 700; }
+  .log-level-error { color: var(--accent2); font-weight: 700; }
+  .log-context { color: var(--accent4); }
+  .log-msg { color: var(--text); }
+
+  /* ══ LEGEND ══ */
   .legend { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); animation: fadeUp 0.5s ease 0.4s both; }
-  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.63rem; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.63rem; color: var(--muted); transition: color 0.2s; cursor: default; }
+  .legend-item:hover { color: var(--text); }
   .legend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dot-color); }
 
   @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
@@ -154,27 +215,44 @@
   @keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:0.3} }
   .pulse { animation: pulse 2s ease-in-out infinite; }
 
-  .flow > *:nth-child(1)  { animation-delay:0.05s; } .flow > *:nth-child(2)  { animation-delay:0.10s; }
-  .flow > *:nth-child(3)  { animation-delay:0.15s; } .flow > *:nth-child(4)  { animation-delay:0.20s; }
-  .flow > *:nth-child(5)  { animation-delay:0.25s; } .flow > *:nth-child(6)  { animation-delay:0.30s; }
-  .flow > *:nth-child(7)  { animation-delay:0.35s; } .flow > *:nth-child(8)  { animation-delay:0.40s; }
-  .flow > *:nth-child(9)  { animation-delay:0.45s; } .flow > *:nth-child(10) { animation-delay:0.50s; }
+  .flow > *:nth-child(1){animation-delay:0.05s;} .flow > *:nth-child(2){animation-delay:0.10s;}
+  .flow > *:nth-child(3){animation-delay:0.15s;} .flow > *:nth-child(4){animation-delay:0.20s;}
+  .flow > *:nth-child(5){animation-delay:0.25s;} .flow > *:nth-child(6){animation-delay:0.30s;}
+  .flow > *:nth-child(7){animation-delay:0.35s;} .flow > *:nth-child(8){animation-delay:0.40s;}
+  .flow > *:nth-child(9){animation-delay:0.45s;} .flow > *:nth-child(10){animation-delay:0.50s;}
   .services-grid .service-card:nth-child(1){animation-delay:0.05s;} .services-grid .service-card:nth-child(2){animation-delay:0.12s;}
   .services-grid .service-card:nth-child(3){animation-delay:0.19s;} .services-grid .service-card:nth-child(4){animation-delay:0.26s;}
+  .services-grid .service-card:nth-child(5){animation-delay:0.33s;}
   .endpoints-grid > *:nth-child(1){animation-delay:0.05s;} .endpoints-grid > *:nth-child(2){animation-delay:0.12s;}
   .endpoints-grid > *:nth-child(3){animation-delay:0.19s;} .endpoints-grid > *:nth-child(4){animation-delay:0.26s;}
-  .endpoints-grid > *:nth-child(5){animation-delay:0.33s;}
+  .endpoints-grid > *:nth-child(5){animation-delay:0.33s;} .endpoints-grid > *:nth-child(6){animation-delay:0.40s;}
   .models-grid > *:nth-child(1){animation-delay:0.05s;} .models-grid > *:nth-child(2){animation-delay:0.12s;}
   .models-grid > *:nth-child(3){animation-delay:0.19s;} .models-grid > *:nth-child(4){animation-delay:0.26s;}
+  .conc-grid > *:nth-child(1){animation-delay:0.05s;} .conc-grid > *:nth-child(2){animation-delay:0.12s;}
+  .conc-grid > *:nth-child(3){animation-delay:0.19s;}
+  .tests-grid > *:nth-child(1){animation-delay:0.05s;} .tests-grid > *:nth-child(2){animation-delay:0.12s;}
+  .tests-grid > *:nth-child(3){animation-delay:0.19s;}
 </style>
 </head>
 <body>
 <div class="wrapper">
 
   <header>
-    <div class="tag">sistema distribuído · nestjs · node.js · typescript</div>
+    <div class="tech-stack">
+      <span class="tech-pill" style="--tc:#00d4ff"><span class="tech-ico">🚀</span>NestJS</span>
+      <span class="tech-pill" style="--tc:#7fff6e"><span class="tech-ico">🟩</span>Node.js</span>
+      <span class="tech-pill" style="--tc:#3178c6"><span class="tech-ico">📘</span>TypeScript</span>
+      <span class="tech-pill" style="--tc:#58a6ff"><span class="tech-ico">🐘</span>PostgreSQL</span>
+      <span class="tech-pill" style="--tc:#ff6b35"><span class="tech-ico">⚡</span>Redis</span>
+      <span class="tech-pill" style="--tc:#c77dff"><span class="tech-ico">🐇</span>RabbitMQ</span>
+      <span class="tech-pill" style="--tc:#06b6d4"><span class="tech-ico">🐳</span>Docker</span>
+      <span class="tech-pill" style="--tc:#ffd166"><span class="tech-ico">◈</span>Prisma</span>
+      <span class="tech-pill" style="--tc:#e535ab"><span class="tech-ico">📐</span>Swagger</span>
+      <span class="tech-pill" style="--tc:#c21325"><span class="tech-ico">🧪</span>Jest</span>
+      <span class="tech-pill" style="--tc:#06b6d4"><span class="tech-ico">🔧</span>Portainer</span>
+    </div>
     <h1>Arquitetura de <span>Venda de Ingressos</span></h1>
-    <p>4 models · 8 endpoints · 4 containers Docker · 4 eventos · RabbitMQ ·  Redis.</p>
+    <p style="white-space:nowrap;font-size:0.75rem;color:#8ba0b4;font-weight:600;">4 models · 8 endpoints · 5 containers Docker · 4 eventos · RabbitMQ · Redis · 88 testes.</p>
   </header>
 
   <!-- ══ 01 — DOCKER ══ -->
@@ -183,15 +261,15 @@
     <div class="docker-label">🐳 &nbsp;cinema_network · containers se comunicam pelo nome do serviço</div>
     <div class="docker-cmd">
       <span class="prompt">$</span><span class="cmd">docker compose up --build</span>
-      <span class="comment">← sobe os 4 serviços · api aguarda os outros via depends_on</span>
+      <span class="comment">← sobe os 5 serviços · migrations rodam automaticamente no boot · api aguarda postgres via healthcheck</span>
     </div>
     <div class="services-grid">
       <div class="service-card" style="--card-color:var(--accent);">
         <div class="service-icon">🚀</div><div class="service-name">cinema-api</div>
         <div class="service-container">container: <span>cinema-api</span></div>
-        <div class="service-image">build: ./Dockerfile · npm run start:dev</div>
+        <div class="service-image">build: ./Dockerfile · start:dev</div>
         <div class="port-row"><span class="service-port"><span>3000</span>:3000</span></div>
-        <div class="service-desc">App NestJS principal. Depende de <strong>postgres, redis e rabbitmq</strong>. Acessa os outros pelo nome: <strong>postgres:5432 · redis:6379 · rabbitmq:5672</strong>.</div>
+        <div class="service-desc">App NestJS principal. Migrations automáticas no boot. Depende de <strong>postgres (healthy), redis e rabbitmq</strong>.</div>
         <div class="network-badge">cinema_network</div>
       </div>
       <div class="service-card" style="--card-color:#58a6ff;">
@@ -199,7 +277,7 @@
         <div class="service-container">container: <span>cinema-postgres</span></div>
         <div class="service-image">image: postgres:15</div>
         <div class="port-row"><span class="service-port"><span>5432</span>:5432</span></div>
-        <div class="service-desc">Banco relacional. Credenciais via <strong>POSTGRES_USER / PASSWORD / DB</strong> do .env. Logging desabilitado. Armazena as <strong>4 models</strong>.</div>
+        <div class="service-desc">Banco relacional. Healthcheck com <strong>pg_isready</strong>. Armazena as <strong>4 models</strong>. Logging desabilitado.</div>
         <div class="network-badge">cinema_network</div>
       </div>
       <div class="service-card" style="--card-color:var(--accent2);">
@@ -207,7 +285,7 @@
         <div class="service-container">container: <span>cinema-redis</span></div>
         <div class="service-image">image: redis:7</div>
         <div class="port-row"><span class="service-port"><span>6379</span>:6379</span></div>
-        <div class="service-desc"><strong>SET seat:{id} NX PX 30000</strong> — lock atômico por assento. TTL de <strong>30s</strong> expira automaticamente. Logging desabilitado.</div>
+        <div class="service-desc"><strong>SET seat:{id} NX PX 30000</strong> — lock atômico por assento. TTL de <strong>30s</strong> expira automaticamente.</div>
         <div class="network-badge">cinema_network</div>
       </div>
       <div class="service-card" style="--card-color:var(--accent4);">
@@ -215,16 +293,55 @@
         <div class="service-container">container: <span>cinema-rabbitmq</span></div>
         <div class="service-image">image: rabbitmq:3-management</div>
         <div class="port-row"><span class="service-port"><span>5672</span>:5672</span><span class="service-port"><span>15672</span>:UI</span></div>
-        <div class="service-desc">Message broker. <strong>:5672</strong> para a api publicar/consumir. <strong>:15672</strong> painel web de gerenciamento. Logging desabilitado.</div>
+        <div class="service-desc">3 filas + <strong>DLQ por fila</strong>. UI em <strong>:15672</strong>. Mensagens persistidas (durable). prefetch(1) por consumer.</div>
+        <div class="network-badge">cinema_network</div>
+      </div>
+      <div class="service-card" style="--card-color:var(--accent6);">
+        <div class="service-icon">🔧</div><div class="service-name">portainer</div>
+        <div class="service-container">container: <span>cinema-portainer</span></div>
+        <div class="service-image">image: portainer/portainer-ce</div>
+        <div class="port-row"><span class="service-port"><span>9000</span>:9000</span></div>
+        <div class="service-desc">Gerenciamento visual Docker. Logs, métricas e terminal dos containers via <strong>browser</strong>.</div>
         <div class="network-badge">cinema_network</div>
       </div>
     </div>
   </div>
 
-  <!-- ══ 02 — MODELS ══ -->
-  <div class="section-title">02 — Models · 4 tabelas no PostgreSQL</div>
-  <div class="models-grid">
+  <!-- ══ 02 — CONCORRÊNCIA ══ -->
+  <div class="section-title">02 — Controle de Concorrência · race condition · deadlock · expiração</div>
+  <div class="conc-grid">
+    <div class="conc-card" style="--conc-color:var(--accent2);">
+      <div class="conc-head"><span style="font-size:1rem">🔒</span><span class="conc-title">Race Condition</span><span class="conc-badge">Redis SET NX</span></div>
+      <div class="conc-body">
+        <div class="conc-step"><div class="conc-num">1</div><div class="conc-text">2 usuários clicam no mesmo assento no mesmo milissegundo</div></div>
+        <div class="conc-step"><div class="conc-num">2</div><div class="conc-text"><span class="code-tag">SET seat:{id} NX PX 30000</span> — operação atômica no Redis</div></div>
+        <div class="conc-step"><div class="conc-num">3</div><div class="conc-text"><strong>Usuário A</strong> adquire o lock → reserva criada → <strong>201 Created</strong></div></div>
+        <div class="conc-step"><div class="conc-num">4</div><div class="conc-text"><strong>Usuário B</strong> recebe <span class="code-tag">false</span> → <strong>409 Conflict</strong> imediato</div></div>
+      </div>
+    </div>
+    <div class="conc-card" style="--conc-color:var(--accent4);">
+      <div class="conc-head"><span style="font-size:1rem">🔐</span><span class="conc-title">Deadlock</span><span class="conc-badge">Prevenido</span></div>
+      <div class="conc-body">
+        <div class="conc-step"><div class="conc-num">1</div><div class="conc-text">Sistema reserva <strong>um assento por vez</strong> — nunca múltiplos recursos simultâneos</div></div>
+        <div class="conc-step"><div class="conc-num">2</div><div class="conc-text">Cada reserva: <strong>1 lock Redis</strong> + <strong>1 linha Postgres</strong> — sem espera circular</div></div>
+        <div class="conc-step"><div class="conc-num">3</div><div class="conc-text">A1+A3 → <strong>2 requisições independentes</strong> — operação multi-lock não existe</div></div>
+        <div class="conc-step"><div class="conc-num">4</div><div class="conc-text">Transaction Prisma garante <strong>atomicidade</strong> no pagamento — tudo ou nada</div></div>
+      </div>
+    </div>
+    <div class="conc-card" style="--conc-color:var(--accent5);">
+      <div class="conc-head"><span style="font-size:1rem">⏱️</span><span class="conc-title">Expiração Automática</span><span class="conc-badge">TTL 30s</span></div>
+      <div class="conc-body">
+        <div class="conc-step"><div class="conc-num">1</div><div class="conc-text">Reserva criada → <span class="code-tag">expiresAt = now+30s</span> + lock Redis TTL 30s</div></div>
+        <div class="conc-step"><div class="conc-num">2</div><div class="conc-text">ReservationConsumer aguarda com <span class="code-tag">sleep(delay)</span> — sem cron job</div></div>
+        <div class="conc-step"><div class="conc-num">3</div><div class="conc-text">Se ainda <strong>PENDING</strong> → expire + assento volta a <strong>AVAILABLE</strong></div></div>
+        <div class="conc-step"><div class="conc-num">4</div><div class="conc-text">Se já <strong>CONFIRMED</strong> → idempotência — ignora sem reprocessar</div></div>
+      </div>
+    </div>
+  </div>
 
+  <!-- ══ 03 — MODELS ══ -->
+  <div class="section-title">03 — Models · 4 tabelas no PostgreSQL</div>
+  <div class="models-grid">
     <div class="model-card" style="--model-color:#58a6ff;">
       <div class="model-header"><span>📋</span><span class="model-name">Session</span><span class="model-badge">raiz</span></div>
       <div class="model-fields">
@@ -237,7 +354,6 @@
         <div class="model-field"><span class="field-name">seats</span><span class="field-type">Seat[]</span><span class="field-note">relação 1:N com Seat</span></div>
       </div>
     </div>
-
     <div class="model-card" style="--model-color:var(--accent5);">
       <div class="model-header"><span>💺</span><span class="model-name">Seat</span><span class="model-badge">recurso disputado</span></div>
       <div class="model-fields">
@@ -249,7 +365,6 @@
         <div class="model-field"><span class="field-name">session</span><span class="field-type">Session</span><span class="field-note">relação N:1 com Session</span></div>
       </div>
     </div>
-
     <div class="model-card" style="--model-color:var(--accent2);">
       <div class="model-header"><span>🎟️</span><span class="model-name">Reservation</span><span class="model-badge">temporária TTL 30s</span></div>
       <div class="model-fields">
@@ -262,7 +377,6 @@
         <div class="model-field"><span class="field-name">sale</span><span class="field-type">Sale?</span><span class="field-note">relação 1:1 opcional</span></div>
       </div>
     </div>
-
     <div class="model-card" style="--model-color:var(--accent3);">
       <div class="model-header"><span>💰</span><span class="model-name">Sale</span><span class="model-badge">venda definitiva</span></div>
       <div class="model-fields">
@@ -274,47 +388,19 @@
         <div class="model-field"><span class="field-name">reservation</span><span class="field-type">Reservation</span><span class="field-note">relação 1:1</span></div>
       </div>
     </div>
-
   </div>
 
-  <!-- ══ 03 — ENDPOINTS ══ -->
-  <div class="section-title">03 — Endpoints · 8 rotas REST + Swagger</div>
+  <!-- ══ 04 — ENDPOINTS ══ -->
+  <div class="section-title">04 — Endpoints · 8 rotas REST + Swagger em /api/docs</div>
   <div class="endpoints-grid">
-
     <div class="endpoint-group" style="--group-color:#58a6ff;">
-      <div class="endpoint-group-header">
-        <span class="endpoint-group-icon">📋</span>
-        <span class="endpoint-group-name">Sessions</span>
-        <span class="endpoint-group-count">3 rotas</span>
-      </div>
+      <div class="endpoint-group-header"><span class="endpoint-group-icon">📋</span><span class="endpoint-group-name">Sessions</span><span class="endpoint-group-count">3 rotas</span></div>
       <div class="endpoint-list">
-        <div class="endpoint-item">
-          <span class="method post">POST</span>
-          <div class="endpoint-info">
-            <div class="endpoint-path">/sessions</div>
-            <div class="endpoint-desc">Cria sessão + gera assentos vinculados (mín. 16). Body: movie, room, startsAt, ticketPrice, totalSeats.</div>
-            <div class="endpoint-tags"><span class="etag" style="color:#58a6ff;border-color:#58a6ff;">201 Created</span></div>
-          </div>
-        </div>
-        <div class="endpoint-item">
-          <span class="method get">GET</span>
-          <div class="endpoint-info">
-            <div class="endpoint-path">/sessions</div>
-            <div class="endpoint-desc">Lista todas as sessões disponíveis.</div>
-            <div class="endpoint-tags"><span class="etag" style="color:#58a6ff;border-color:#58a6ff;">200 OK</span></div>
-          </div>
-        </div>
-        <div class="endpoint-item">
-          <span class="method get">GET</span>
-          <div class="endpoint-info">
-            <div class="endpoint-path">/sessions/<span>:id</span></div>
-            <div class="endpoint-desc">Detalhe de uma sessão específica com seus assentos.</div>
-            <div class="endpoint-tags"><span class="etag" style="color:#58a6ff;border-color:#58a6ff;">200 OK</span><span class="etag" style="color:var(--muted);border-color:var(--muted);">404</span></div>
-          </div>
-        </div>
+        <div class="endpoint-item"><span class="method post">POST</span><div class="endpoint-info"><div class="endpoint-path">/sessions</div><div class="endpoint-desc">Cria sessão + gera assentos (mín. 16). Body: movie, room, startsAt, ticketPrice, totalSeats.</div><div class="endpoint-tags"><span class="etag" style="color:#58a6ff;border-color:#58a6ff;">201 Created</span></div></div></div>
+        <div class="endpoint-item"><span class="method get">GET</span><div class="endpoint-info"><div class="endpoint-path">/sessions</div><div class="endpoint-desc">Lista todas as sessões disponíveis.</div><div class="endpoint-tags"><span class="etag" style="color:#58a6ff;border-color:#58a6ff;">200 OK</span></div></div></div>
+        <div class="endpoint-item"><span class="method get">GET</span><div class="endpoint-info"><div class="endpoint-path">/sessions/<span>:id</span></div><div class="endpoint-desc">Detalhe de uma sessão com seus assentos.</div><div class="endpoint-tags"><span class="etag" style="color:#58a6ff;border-color:#58a6ff;">200 OK</span><span class="etag" style="color:var(--muted);border-color:var(--muted);">404</span></div></div></div>
       </div>
     </div>
-
     <div class="endpoint-group" style="--group-color:var(--accent5);">
       <div class="endpoint-group-header">
         <span class="endpoint-group-icon">💺</span>
@@ -326,25 +412,24 @@
           <span class="method get">GET</span>
           <div class="endpoint-info">
             <div class="endpoint-path">/seats/<span>:sessionId</span></div>
-            <div class="endpoint-desc">Lista assentos da sessão em tempo real. Cruza Postgres + Redis para status preciso: AVAILABLE, RESERVED ou SOLD.</div>
+            <div class="endpoint-desc">Disponibilidade em tempo real. Cruza Postgres + Redis para status preciso: AVAILABLE, RESERVED ou SOLD + isLocked.</div>
             <div class="endpoint-tags"><span class="etag" style="color:var(--accent5);border-color:var(--accent5);">200 OK</span><span class="etag" style="color:var(--accent3);border-color:var(--accent3);">tempo real</span></div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="endpoint-group" style="--group-color:var(--accent2);">
       <div class="endpoint-group-header">
         <span class="endpoint-group-icon">🎟️</span>
         <span class="endpoint-group-name">Reservations</span>
-        <span class="endpoint-group-count">2 rotas</span>
+        <span class="endpoint-group-count">3 rotas</span>
       </div>
       <div class="endpoint-list">
         <div class="endpoint-item">
           <span class="method post">POST</span>
           <div class="endpoint-info">
             <div class="endpoint-path">/reservations</div>
-            <div class="endpoint-desc">Adquire lock Redis → cria Reservation (PENDING). Retorna reservationId + expiresAt. Body: seatId, userId.</div>
+            <div class="endpoint-desc">Adquire lock Redis → cria Reservation (PENDING). Body: seatId, userId.</div>
             <div class="endpoint-tags"><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">201 Created</span><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">409 Conflict</span></div>
           </div>
         </div>
@@ -352,13 +437,20 @@
           <span class="method get">GET</span>
           <div class="endpoint-info">
             <div class="endpoint-path">/reservations/<span>:id</span></div>
-            <div class="endpoint-desc">Consulta status de uma reserva: PENDING, CONFIRMED ou EXPIRED.</div>
+            <div class="endpoint-desc">Status da reserva: PENDING, CONFIRMED ou EXPIRED.</div>
             <div class="endpoint-tags"><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">200 OK</span><span class="etag" style="color:var(--muted);border-color:var(--muted);">404</span></div>
+          </div>
+        </div>
+        <div class="endpoint-item">
+          <span class="method get">GET</span>
+          <div class="endpoint-info">
+            <div class="endpoint-path">/reservations/user/<span>:userId</span></div>
+            <div class="endpoint-desc">Lista reservas de um usuário.</div>
+            <div class="endpoint-tags"><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">200 OK</span></div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="endpoint-group" style="--group-color:var(--accent3);">
       <div class="endpoint-group-header">
         <span class="endpoint-group-icon">💳</span>
@@ -370,13 +462,12 @@
           <span class="method post">POST</span>
           <div class="endpoint-info">
             <div class="endpoint-path">/payments/confirm/<span>:reservationId</span></div>
-            <div class="endpoint-desc">Valida expiresAt → cria Sale → Seat vira SOLD → remove lock Redis → publica pagamento_confirmado.</div>
-            <div class="endpoint-tags"><span class="etag" style="color:var(--accent3);border-color:var(--accent3);">201 Created</span><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">410 Gone</span></div>
+            <div class="endpoint-desc">Confirma pagamento dentro da janela de 30s. Resposta: id, reservationId, seatId, userId, paidAt.</div>
+            <div class="endpoint-tags"><span class="etag" style="color:var(--accent3);border-color:var(--accent3);">201 Created</span><span class="etag" style="color:var(--muted);border-color:var(--muted);">404</span><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">409</span><span class="etag" style="color:var(--accent2);border-color:var(--accent2);">410 Gone</span><span class="etag" style="color:var(--muted);border-color:var(--muted);">422</span></div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="endpoint-group" style="--group-color:var(--accent4);">
       <div class="endpoint-group-header">
         <span class="endpoint-group-icon">💰</span>
@@ -388,37 +479,34 @@
           <span class="method get">GET</span>
           <div class="endpoint-info">
             <div class="endpoint-path">/sales/history/<span>:userId</span></div>
-            <div class="endpoint-desc">Histórico de compras confirmadas do usuário. Retorna lista de Sales com dados do assento e sessão.</div>
+            <div class="endpoint-desc">Consulta histórico de compras confirmadas. Retorna movie, room, seatNumber, startsAt, ticketPrice, paidAt por venda. Só leitura — Sale é criada pelo Payment.</div>
             <div class="endpoint-tags"><span class="etag" style="color:var(--accent4);border-color:var(--accent4);">200 OK</span></div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="endpoint-group" style="--group-color:var(--accent);">
       <div class="endpoint-group-header">
         <span class="endpoint-group-icon">📘</span>
         <span class="endpoint-group-name">Swagger</span>
-        <span class="endpoint-group-count">diferencial</span>
+        <span class="endpoint-group-count">docs</span>
       </div>
       <div class="endpoint-list">
         <div class="endpoint-item">
           <span class="method get">GET</span>
           <div class="endpoint-info">
             <div class="endpoint-path">/api/docs</div>
-            <div class="endpoint-desc">Documentação interativa OpenAPI. Todos os endpoints com exemplos de body, responses e schemas.</div>
-            <div class="endpoint-tags"><span class="etag" style="color:var(--accent);border-color:var(--accent);">@nestjs/swagger</span><span class="etag" style="color:var(--accent3);border-color:var(--accent3);">+pontos</span></div>
+            <div class="endpoint-desc">Documentação interativa OpenAPI com exemplos de body, responses e schemas.</div>
+            <div class="endpoint-tags"><span class="etag" style="color:var(--accent);border-color:var(--accent);">@nestjs/swagger</span></div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- ══ 04 — FLUXO ══ -->
-  <div class="section-title">04 — Fluxo interno · NestJS (cinema-api)</div>
+  <!-- ══ 05 — FLUXO ══ -->
+  <div class="section-title">05 — Fluxo interno · NestJS (cinema-api)</div>
   <div class="flow">
-
     <div class="node" style="--node-color:var(--accent);">
       <div class="node-header"><span class="node-icon">🎬</span><span class="node-title">Clientes / Frontend / API</span><span class="node-badge">EXTERNO</span></div>
       <div class="node-layers">
@@ -428,29 +516,23 @@
       </div>
       <div class="node-explain">Qualquer cliente REST em <strong>localhost:3000</strong>. Múltiplos usuários simultâneos tentando o mesmo assento — o sistema garante que apenas 1 venda ocorra.</div>
     </div>
-
     <div class="connector" style="--conn-color:var(--accent);">
       <div class="conn-line pulse"></div><div class="conn-label">HTTP · localhost:3000</div><div class="conn-line"></div>
     </div>
-
     <div class="node" style="--node-color:#58a6ff;">
       <div class="node-header"><span class="node-icon">📋</span><span class="node-title">sessions/</span><span class="node-badge">CRUD</span></div>
       <div class="node-layers"><span class="layer hi">Controller</span><span class="layer hi">Service</span><span class="layer hi">Repository</span><span class="layer">DTOs</span><span class="layer">Interfaces</span></div>
-      <div class="node-explain">Cria sessões e gera os <strong>assentos vinculados</strong> (mín. 16). Controller → Service → Repository → <strong>postgres:5432</strong>.</div>
+      <div class="node-explain">Cria sessões e gera os <strong>assentos vinculados</strong> (mín. 16, 8 por fileira: A1-A8, B1-B8...). Controller → Service → Repository → <strong>postgres:5432</strong>.</div>
     </div>
-
     <div class="connector" style="--conn-color:#58a6ff;">
       <div class="conn-line"></div><div class="conn-label">disponibilidade em tempo real</div><div class="conn-line"></div>
     </div>
-
     <div class="node" style="--node-color:var(--accent5);">
       <div class="node-header"><span class="node-icon">💺</span><span class="node-title">seats/</span><span class="node-badge">CONSULTA</span></div>
       <div class="node-layers"><span class="layer hi">Controller</span><span class="layer hi">Service</span><span class="layer hi">Repository</span><span class="layer">DTOs</span></div>
-      <div class="node-explain">Status por assento: <strong>AVAILABLE / RESERVED / SOLD</strong>. Cruza Postgres + Redis — assento só aparece livre se não tiver lock nem reserva válida.</div>
+      <div class="node-explain">Status por assento: <strong>AVAILABLE / RESERVED / SOLD</strong> + <strong>isLocked</strong>. Cruza Postgres + Redis com <strong>Promise.all</strong> paralelo.</div>
     </div>
-
     <div class="split-conn-top"><div class="left-drop"></div><div class="right-drop"></div></div>
-
     <div class="split">
       <div class="split-col">
         <div class="node" style="--node-color:var(--accent2);max-width:100%;">
@@ -463,26 +545,24 @@
         <div class="node" style="--node-color:var(--accent3);max-width:100%;">
           <div class="node-header"><span class="node-icon">💳</span><span class="node-title">payments/</span><span class="node-badge">CONFIRM</span></div>
           <div class="node-layers"><span class="layer hi">Controller</span><span class="layer hi">Service</span><span class="layer">DTOs</span></div>
-          <div class="node-explain">Valida <strong>expiresAt &gt; now</strong>. Se expirou → <strong>410 Gone</strong>. Se ok → cria Sale, Seat vira SOLD, remove lock, publica payment.confirmed.</div>
+          <div class="node-explain">Recebe <strong>:reservationId</strong>. Valida expiração → confirma → retorna Sale (<strong>id, reservationId, seatId, userId, paidAt</strong>).</div>
         </div>
       </div>
       <div class="split-col">
         <div class="node" style="--node-color:var(--accent4);max-width:100%;">
           <div class="node-header"><span class="node-icon">📨</span><span class="node-title">events/</span><span class="node-badge">ASYNC</span></div>
           <div class="node-layers"><span class="layer hi">publishers</span><span class="layer hi">consumers</span></div>
-          <div class="node-explain"><strong>Publishers</strong> enfileiram após cada ação. <strong>Consumers</strong> processam em background — expiração libera assento e remove lock sem cron job.</div>
+          <div class="node-explain"><strong>Publishers</strong> enfileiram após cada ação. <strong>Consumers</strong> processam em background — expiração libera assento sem cron job.</div>
         </div>
       </div>
     </div>
-
     <div class="connector" style="--conn-color:var(--muted);">
       <div class="conn-line" style="height:26px;"></div><div class="conn-label">persiste · lê · adquire lock</div><div class="conn-line" style="height:26px;"></div>
     </div>
-
     <div class="infra-row">
       <div class="infra-node" style="--node-color:var(--accent2);">
         <div class="infra-icon">⚡</div><div class="infra-name">redis:6379</div>
-        <div class="infra-detail"><strong>SET seat:{id} NX PX 30000</strong><br/>Atômico — só 1 processo adquire o lock. Expira sozinho em <strong>30s</strong>.</div>
+        <div class="infra-detail"><strong>SET seat:{id} NX PX 30000</strong><br/>Atômico — só 1 processo adquire o lock. Expira sozinho em <strong>30s</strong>. Fallback: <strong>@@unique</strong> no Postgres.</div>
       </div>
       <div class="infra-node" style="--node-color:#58a6ff;">
         <div class="infra-icon">🐘</div><div class="infra-name">postgres:5432</div>
@@ -490,33 +570,111 @@
       </div>
       <div class="infra-node" style="--node-color:var(--accent4);">
         <div class="infra-icon">🐇</div><div class="infra-name">rabbitmq:5672</div>
-        <div class="infra-detail">Filas: <strong>reservations · payments · expirations</strong>.<br/>DLQ + retry backoff exponencial. UI em <strong>:15672</strong>.</div>
+        <div class="infra-detail">Filas: <strong>reservations · payments · expirations</strong>.<br/>DLQ + retry backoff exponencial. <strong>prefetch(1)</strong>. UI em <strong>:15672</strong>.</div>
       </div>
     </div>
-
     <div class="connector" style="--conn-color:var(--accent4);">
       <div class="conn-line" style="height:22px;background:var(--accent4);"></div>
       <div class="conn-label" style="--conn-color:var(--accent4);">eventos assíncronos · rabbitmq:5672</div>
       <div class="conn-line" style="height:22px;background:var(--accent4);"></div>
     </div>
-
     <div class="events-section">
       <div class="events-node" style="--node-color:var(--accent4);">
         <div class="node-header"><span class="node-icon">📤</span><span class="node-title">Publishers</span><span class="node-badge">PUBLICA</span></div>
         <span class="event-tag" style="color:var(--accent2);border-color:var(--accent2);">reservation.created</span>
         <span class="event-tag" style="color:var(--accent3);border-color:var(--accent3);">payment.confirmed</span>
         <span class="event-tag" style="color:var(--accent5);border-color:var(--accent5);">reservation.expired</span>
-        <span class="event-tag" style="color:var(--accent);border-color:var(--accent);">seat.released</span>
       </div>
       <div class="events-node" style="--node-color:var(--accent3);">
         <div class="node-header"><span class="node-icon">📥</span><span class="node-title">Consumers</span><span class="node-badge">PROCESSA</span></div>
-        <span class="event-tag" style="color:var(--accent2);border-color:var(--accent2);">→ libera assento expirado</span>
-        <span class="event-tag" style="color:var(--accent);border-color:var(--accent);">→ remove lock Redis</span>
-        <span class="event-tag" style="color:var(--accent5);border-color:var(--accent5);">→ atualiza status DB</span>
-        <span class="event-tag" style="color:var(--accent4);border-color:var(--accent4);">→ DLQ + retry backoff</span>
+        <span class="event-tag" style="color:var(--accent2);border-color:var(--accent2);">→ espera TTL, expira se PENDING</span>
+        <span class="event-tag" style="color:var(--accent);border-color:var(--accent);">→ libera assento AVAILABLE</span>
+        <span class="event-tag" style="color:var(--accent5);border-color:var(--accent5);">→ idempotente: ignora CONFIRMED</span>
+        <span class="event-tag" style="color:var(--accent4);border-color:var(--accent4);">→ DLQ + retry se falhar</span>
       </div>
     </div>
+  </div>
 
+  <!-- ══ 06 — TESTES ══ -->
+  <div class="section-title">06 — Testes · 88 passando · 11 suites · 0 falhas · ~3.7s</div>
+
+  <div class="total-bar">
+    <div style="text-align:center;"><div class="total-num">88</div><div class="total-label">testes <strong>passando</strong></div></div>
+    <div style="text-align:center;"><div class="total-num">11</div><div class="total-label">suites <strong>verdes</strong></div></div>
+    <div style="text-align:center;"><div class="total-num">0</div><div class="total-label">falhas</div></div>
+    <div style="text-align:center;"><div class="total-num">3.7s</div><div class="total-label">sem Docker</div></div>
+  </div>
+
+  <div class="tests-grid" style="margin-top:1rem;">
+    <div class="test-card" style="--test-color:var(--accent3);">
+      <div class="test-header">
+        <span>🧪</span><span class="test-name">Unit Tests</span><span class="test-count">53 testes</span>
+      </div>
+      <div class="test-list">
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">session.service</span><span class="test-detail">8 testes · 100%</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">seat.service</span><span class="test-detail">6 testes · 100%</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">reservation.service</span><span class="test-detail">12 testes · 100%</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">reservation.consumer</span><span class="test-detail">8 testes · 94%</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">payment.service</span><span class="test-detail">13 testes · 100%</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">sale.service</span><span class="test-detail">6 testes · 100%</span></div>
+      </div>
+    </div>
+    <div class="test-card" style="--test-color:#58a6ff;">
+      <div class="test-header">
+        <span>📋</span><span class="test-name">Contract Tests</span><span class="test-count">20 testes</span>
+      </div>
+      <div class="test-list">
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">session.contract</span><span class="test-detail">7 testes · HTTP</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">reservation.contract</span><span class="test-detail">7 testes · HTTP</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">payment.contract</span><span class="test-detail">6 testes · HTTP</span></div>
+        <div class="test-item" style="border-bottom:none;margin-top:0.3rem;"><span style="font-size:0.55rem;color:var(--muted);">Shape do JSON · status codes · 201 · 404 · 409 · 410 · 422</span></div>
+      </div>
+    </div>
+    <div class="test-card" style="--test-color:var(--accent4);">
+      <div class="test-header">
+        <span>🔀</span><span class="test-name">Flow Tests</span><span class="test-count">15 testes</span>
+      </div>
+      <div class="test-list">
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">reserva → pagamento</span><span class="test-detail">7 testes</span></div>
+        <div class="test-item"><span class="test-check">✓</span><span class="test-suite">expiração automática</span><span class="test-detail">8 testes</span></div>
+        <div class="test-item" style="border-bottom:none;margin-top:0.3rem;"><span style="font-size:0.55rem;color:var(--muted);">Race condition · Promise.allSettled · idempotência · handler capturado</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 07 — LOGGER ══ -->
+  <div class="section-title">07 — Logger · Temas visuais por contexto · Interceptor + Filter globais</div>
+  <div class="logger-grid">
+    <div class="logger-card">
+      <div class="logger-card-title">Output no terminal</div>
+      <div class="log-line"><span class="log-time">09:21:58</span> <span class="log-level-info">✓ INFO</span>  <span class="log-context">🐇 [RabbitMQService]</span> <span class="log-msg">Fila declarada: reservations</span></div>
+      <div class="log-line"><span class="log-time">09:21:59</span> <span class="log-level-info">✓ INFO</span>  <span class="log-context">🎬 [SessionService]</span> <span class="log-msg">Sessão criada { id: "db11ea..." }</span></div>
+      <div class="log-line"><span class="log-time">09:22:01</span> <span class="log-level-info">✓ INFO</span>  <span class="log-context">🌐 [HTTP]</span> <span style="color:var(--accent5);">POST</span> <span class="log-msg">/sessions → 201 · 89ms</span></div>
+      <div class="log-line"><span class="log-time">09:22:05</span> <span class="log-level-warn">⚠ WARN</span>  <span class="log-context">🌐 [HttpExceptionFilter]</span> <span style="color:var(--accent5);">POST</span> <span class="log-msg">/reservations → 409</span></div>
+      <div class="log-line"><span class="log-time">09:22:30</span> <span class="log-level-info">✓ INFO</span>  <span class="log-context">🗒️ [ReservationConsumer]</span> <span class="log-msg">Reserva expirada automaticamente</span></div>
+    </div>
+    <div class="logger-card">
+      <div class="logger-card-title">Identidade visual por módulo</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.6rem;">
+        <span style="color:var(--accent3);">🟢 Redis</span>
+        <span style="color:var(--accent4);">🐇 RabbitMQ</span>
+        <span style="color:#58a6ff;">🗄️ Prisma</span>
+        <span style="color:var(--accent3);">🎬 Session</span>
+        <span style="color:var(--accent6);">🪑 Seat</span>
+        <span style="color:var(--accent4);">🗒️ Reservation</span>
+        <span style="color:var(--accent5);">💳 Payment</span>
+        <span style="color:var(--accent3);">💰 Sale</span>
+        <span style="color:var(--accent);">🌐 HTTP</span>
+      </div>
+      <div style="margin-top:0.8rem;font-size:0.58rem;color:var(--muted);line-height:1.6;">
+        <strong style="color:var(--accent3);">✓ INFO</strong> → fluxo normal &nbsp;·&nbsp;
+        <strong style="color:var(--accent5);">⚠ WARN</strong> → erro do cliente (4xx) &nbsp;·&nbsp;
+        <strong style="color:var(--accent2);">✖ ERROR</strong> → erro do servidor (5xx)<br/>
+        <strong>LoggingInterceptor</strong> → captura 2xx automaticamente (arrays → total, objetos → id)<br/>
+        <strong>HttpExceptionFilter</strong> → captura erros automaticamente (4xx → warn, 5xx → error)<br/>
+        Registrados via <strong>APP_INTERCEPTOR / APP_FILTER</strong> no app.module.ts
+      </div>
+    </div>
   </div>
 
   <div class="legend">
@@ -527,6 +685,7 @@
     <div class="legend-item"><div class="legend-dot" style="--dot-color:var(--accent4);"></div>RabbitMQ :5672 · UI :15672</div>
     <div class="legend-item"><div class="legend-dot" style="--dot-color:#58a6ff;"></div>PostgreSQL :5432</div>
     <div class="legend-item"><div class="legend-dot" style="--dot-color:var(--accent5);"></div>Seats · Disponibilidade</div>
+    <div class="legend-item"><div class="legend-dot" style="--dot-color:var(--accent6);"></div>Portainer · :9000</div>
   </div>
 
 </div>
